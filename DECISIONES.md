@@ -6,22 +6,37 @@
 * **Preservación de Evidencia:** Se preservó de forma intacta e inmutable la traza histórica de la Corrida 001 en `corridas/corrida_001/run.json` y `agente/audit_log.jsonl` (reflejando `iteraciones: 0`, `tool_calls: []`, `tokens: NO_DISPONIBLE`, `costo incremental: USD 0`, error HTTP 404 y verificación de sanitización exitosa), sin inventar tokens ni falsear el resultado.
 * **Decisión:** Actualizar el punto único de configuración a `CONFIGURED_GEMINI_MODEL = "gemini-3.1-flash-lite"`.
 * **Motivo Académico:** Evaluar el modelo vigente más pequeño, veloz y costo-eficiente para tareas agénticas de supervisión técnica de demanda bajo Free Tier (USD 0 incremental). Se mantiene estricta la política de **cero fallback automático**, registrando fielmente los resultados reales de cada corrida.
+* **Evidencia de origen:** `corridas/evidencia_iteracion/corrida_001/run.json` (Fallo `HTTPError 404: Not Found` con `gemini-2.5-flash`).
+* **Artefactos modificados:** `agente/agent_supervisor.py` (`CONFIGURED_GEMINI_MODEL = "gemini-3.1-flash-lite"`), `prompts/system_prompt.md` (V0.2).
+* **Corrida(s) de validación:** `corridas/corrida_002/run.json`.
+* **Resultado:** Convalidación exitosa de Function Calling multi-turno y salida JSON estructurada en producción real.
+* **Estado:** Mantenida (Gemini 3.1 Flash-Lite ratificado como baseline).
 
 ## DEC-002: Convalidación de Gemini 3.1 Flash-Lite y hallazgo de sobre-consulta
 * **Fecha:** 2026-09-03
 * **Contexto:** La Corrida 002 real se ejecutó con éxito utilizando `gemini-3.1-flash-lite` bajo Free Tier verificado, completando 3 tool calls dinámicas, 7.649 tokens reales, ~8.66 s de latencia, dictamen estructurado válido y verificación de seguridad PASS (`corridas/corrida_002/run.json`).
 * **Decisión:** Ratificar `gemini-3.1-flash-lite` como baseline oficial del agente supervisor.
 * **Hallazgo / Aprendizaje:** La auditoría académica de la corrida identificó una tendencia a consultar evidencia marginal (agotando el máximo de 3 herramientas en un escenario operativo normal y no crítico) inducida por heurísticas prescriptivas en el System Prompt. Para la versión V0.3 se decide sustituir las reglas imperativas por principios de investigación y parada temprana fundamentada.
+* **Evidencia de origen:** `corridas/corrida_002/run.json` (3 tool calls consumidas ante demanda moderada y clima favorable).
+* **Artefactos modificados:** `prompts/system_prompt.md` (`sacme-supervisor-v0.3`), `prompts/HISTORIAL_PROMPTS.md`.
+* **Corrida(s) de validación:** `corridas/evidencia_iteracion/corrida_003/run.json`, `corridas/evidencia_iteracion/corrida_004/run.json`.
+* **Resultado:** Reglas rígidas eliminadas; el agente delibera con principios generales, aunque V0.3 no frenó la inercia exhaustiva en Corrida 004.
+* **Estado:** Sustituida (reemplazada por V0.4 en DEC-004).
 
 ## DEC-003: Robustez de Transporte HTTP (Timeout Extendido y Retry Transitorio)
 * **Fecha:** 2026-09-03
 * **Contexto:** En la Corrida 003 real ejecutada con el System Prompt V0.3, el request HTTP hacia Gemini API experimentó un socket read timeout a los 30.06 segundos (`The read operation timed out`) producto de la latencia y filtros de la red corporativa. La corrida concluyó sin inferencia ni dictamen, preservando intacta la evidencia en `corridas/corrida_003/run.json` con seguridad PASS y costo incremental USD 0.
 * **Decisión:** 
   1. Aumentar el timeout por petición HTTP de 30 a 90 segundos (`timeout_seconds = 90`).
-  2. Incorporar una política de transporte con un único reintento técnico (máx 1 retry) confinado estrictamente a fallos transitorios de red (`READ_TIMEOUT`, HTTP 429, HTTP 5xx).
+  2. Incorporar una política de transporte con máximo 1 reintento técnico por solicitud, confinado estrictamente a fallos transitorios de red (`READ_TIMEOUT`, HTTP 429, HTTP 5xx).
   3. No reintentar bajo ninguna circunstancia errores semánticos, de esquema, tool calling inválido o errores 4xx no transitorios.
   4. Registrar con total transparencia en `run.json` cada intento fallido y reintento (`request_attempt`, `retry_reason`, `retry_count`, `timeout_seconds`).
 * **Motivo Académico:** Garantizar robustez operativa frente a la variabilidad de la red sin alterar en modo alguno la lógica agéntica, los prompts, las herramientas, los criterios de riesgo ni las decisiones del modelo. La Corrida 003 queda registrada como evidencia histórica de contingencia de transporte, programándose la siguiente ejecución en `corridas/corrida_004/run.json`.
+* **Evidencia de origen:** `corridas/evidencia_iteracion/corrida_003/run.json` (Socket Read Timeout a los 30.06s por proxy corporativo).
+* **Artefactos modificados:** `agente/agent_supervisor.py` (`timeout_seconds = 90`, política de reintento técnico único ante fallas transitorias de red/servidor).
+* **Corrida(s) de validación:** `corridas/evidencia_iteracion/corrida_004/run.json`, `corridas/corrida_006/run.json`.
+* **Resultado:** Transporte robusto validado empíricamente: máximo 1 reintento técnico por solicitud. La Corrida 006 registró 2 retries totales distribuidos en solicitudes distintas; ninguna solicitud excedió el máximo de 1 retry.
+* **Estado:** Mantenida (política activa y definitiva de transporte).
 
 ## DEC-004: Evaluación de Corrida 004 y refuerzo de criterio para herramientas secundarias (V0.4)
 * **Fecha:** 2026-09-03
@@ -36,6 +51,11 @@
      c) la recomendación operativa.
      Si el agente no puede identificar cómo el resultado cambiaría alguno de esos 3 elementos, debe detener la investigación y emitir el dictamen.
 * **Motivo Académico:** Inducir selectividad genuina y parsimonia epistémica mediante razonamiento de valor marginal de la información, sin imponer reglas determinísticas por temperatura ni restringir artificialmente el presupuesto de 3 herramientas.
+* **Evidencia de origen:** `corridas/evidencia_iteracion/corrida_004/run.json` (3 tool calls ante consulta simple de 1 día).
+* **Artefactos modificados:** `prompts/system_prompt.md` (`sacme-supervisor-v0.4` con Regla de Justificación Previa), `prompts/HISTORIAL_PROMPTS.md`.
+* **Corrida(s) de validación:** `corridas/evidencia_iteracion/corrida_005/run.json`.
+* **Resultado:** Contrato formal actualizado; el modelo persiste en consultar 3/3 tools ante 1 día, diagnosticándose una estrategia epistémica conservadora nativa del LLM.
+* **Estado:** Congelada (se consolidó como la formulación definitiva V0.4).
 
 ## DEC-005: Cierre de optimización de parada temprana y congelamiento de V0.4
 * **Fecha:** 2026-09-03
@@ -46,6 +66,11 @@
   2. Congelar formalmente la versión **V0.4 (`sacme-supervisor-v0.4`)** como baseline oficial y definitivo del sistema.
   3. Mantener intactos el modelo (`gemini-3.1-flash-lite`), las 3 herramientas read-only, el límite técnico de 3 llamadas, el timeout de 90 s, el reintento técnico único y la infraestructura de sanitización y seguridad.
 * **Enfoque Académico para Próximas Corridas:** Las siguientes corridas evaluarán la consistencia analítica, solidez técnica y adaptabilidad del agente ante escenarios variados de demanda, desistiendo de intervenir artificialmente sobre la cantidad de tool calls.
+* **Evidencia de origen:** `corridas/evidencia_iteracion/corrida_005/run.json` (Consumo de 3/3 tools persistente ante 1 día; límite práctico de la optimización del prompt).
+* **Artefactos modificados:** `prompts/system_prompt.md` (congelamiento definitivo de `sacme-supervisor-v0.4`), `prompts/HISTORIAL_PROMPTS.md`.
+* **Corrida(s) de validación:** `corridas/corrida_006/run.json`, `corridas/corrida_007/run.json`.
+* **Resultado:** Se frena la intervención sobre el prompt para preservar la autonomía agéntica genuina y evitar la degradación a un árbol determinístico.
+* **Estado:** Congelada (Baseline oficial inmutable V0.4).
 
 ## DEC-006: Validación final del baseline V0.4 mediante corridas exitosas
 * **Fecha:** 2026-09-03
@@ -57,7 +82,7 @@
     * Clasificación: `NORMAL` (Pico 4.508 MW).
     * Suficiencia: `COMPLETA`.
     * Tokens: 8.069 tokens reportados por API.
-    * Resiliencia: 2 reintentos técnicos recuperados exitosamente ante fallos transitorios `HTTP 503: Service Unavailable`.
+    * Resiliencia: 2 reintentos técnicos totales recuperados exitosamente ante fallos transitorios `HTTP 503: Service Unavailable` (política de máximo 1 reintento técnico por solicitud; la Corrida 006 registró 2 retries totales distribuidos en solicitudes distintas: iteración 1 y dictamen final; ninguna solicitud excedió el máximo de 1 retry).
     * Dictamen: Estructurado, fundado y válido.
     * Seguridad: PASS (sin filtraciones corporativas ni de red).
     * Costo incremental: USD 0 (Free Tier verificado).
@@ -81,6 +106,11 @@
   2. **Corrida 006:** Evaluación a 3 días con resiliencia de transporte demostrada (Baseline V0.4, clasificación `NORMAL`, 2 retries HTTP 503 recuperados, 8.069 tokens).
   3. **Corrida 007:** Evaluación extendida a 5 días con sensibilidad operativa (Baseline V0.4, clasificación `OBSERVAR`, pico 5.006 MW, Tmin 1.9°C, 8.756 tokens).
   Las Corridas 001, 003, 004 y 005 se conservan selladas como evidencia histórica obligatoria de iteración, contingencias de API (HTTP 404, Read Timeout, HTTP 503) y gobierno del sistema agéntico.
+* **Evidencia de origen:** `corridas/corrida_006/run.json` y `corridas/corrida_007/run.json`.
+* **Artefactos modificados:** `docs/CORRIDAS.md`, `README.md`, definición de la Terna Principal (002, 006, 007).
+* **Corrida(s) de validación:** `corridas/corrida_006/run.json` (Resiliencia HTTP 503 superada: 2 retries totales en solicitudes distintas; máx 1 retry por solicitud) y `corridas/corrida_007/run.json` (Sensibilidad y discriminación operativa a OBSERVAR ante ola polar de 1.9°C).
+* **Resultado:** Terna académica contrastada y convalidada con costo incremental USD 0 y seguridad PASS.
+* **Estado:** Mantenida (Cierre definitivo del ciclo experimental).
 
 
 

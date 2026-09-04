@@ -1,10 +1,23 @@
 # Historial y Evolución de Prompts (MBA UCEMA)
 
-El diseño del contrato de instrucciones del Agente Supervisor evolucionó a través de 4 versiones formales, reflejando el proceso de iteración, auditoría y aprendizaje empírico.
+El diseño del contrato de instrucciones del Agente Supervisor evolucionó desde el prototipo inicial (`Pre-V0.3`) a través de las versiones formales V0.2, V0.3 y V0.4, reflejando el proceso de iteración, auditoría y aprendizaje empírico.
 
 ---
 
-## Versión V0.1 — Prototipo Inicial (Prescriptivo)
+## 1. Tabla de Evolución de Versiones
+
+| Versión | Denominación en Código | Motivación de Diseño | Decisión que la Origina | Corridas Asociadas | Estado |
+| :---: | :--- | :--- | :---: | :---: | :---: |
+| **Pre-V0.3** | *Pre-V0.3* (Prototipo Inicial) | Prototipo inicial con heurísticas prescriptivas rígidas por temperatura. | Baseline inicial | **Corrida 001** | Obsoleta (Fallo HTTP 404 en Gemini 2.5) |
+| **V0.2** | `sacme-supervisor-v0.2` | Adaptación de function calling nativo para Gemini 3.1 Flash-Lite. | **DEC-001** | **Corrida 002** | Sustituida (Inducía sobre-consulta de tools) |
+| **V0.3** | `sacme-supervisor-v0.3` | Reemplazo de heurísticas por principios generales de parada temprana. | **DEC-002** | **Corrida 003**, **Corrida 004** | Sustituida (No resolvió sobre-consulta ante 1d) |
+| **V0.4** | `sacme-supervisor-v0.4` | Regla de Justificación Previa de Relevancia Marginal para herramientas secundarias. | **DEC-004** / **DEC-005** | **Corrida 005**, **Corrida 006**, **Corrida 007** | **Congelada (Baseline Oficial Definitivo)** |
+
+---
+
+## 2. Detalle Histórico de Iteraciones
+
+### Prototipo Inicial (Pre-V0.3) — Heurísticas Prescriptivas
 * **Modelo:** `gemini-1.5-flash` / `gemini-2.5-flash`
 * **Características:**
   * Heurísticas rígidas que inducían la consulta de herramientas en función de rangos de temperatura fijados de antemano.

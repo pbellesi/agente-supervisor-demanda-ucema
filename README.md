@@ -16,15 +16,14 @@ El desarrollo fue construido **sin frameworks de abstracción opaca** (cero depe
 
 ---
 
----
-
-## Evidencia clave y acceso rápido (D3 / D4)
+## Evidencia clave y acceso rápido (D2 / D3 / D4)
 
 > [!IMPORTANT]
 > **Preservación Inmutable y Trazabilidad Forense:**
-> Todas las corridas reportadas provienen de ejecuciones reales contra Google Gemini Free Tier y están preservadas inmutables en `corridas/`. Para máxima transparencia y evaluación automatizada según las dimensiones D3 (reproducibilidad/formatos) y D4 (economía/metadata):
+> Todas las corridas reportadas provienen de ejecuciones reales contra Google Gemini Free Tier y están preservadas inmutables en `corridas/`. Para máxima transparencia y evaluación automatizada según las dimensiones D2 (proceso documentado), D3 (reproducibilidad/formatos) y D4 (economía/metadata):
 > 
-> * **Suite de Tests Automatizada (9/9 passing):** Ejecutar `python tests/test_agent.py` para validar tools, sanitización, estrictez TLS, inmutabilidad de hashes y coherencia de vistas derivadas (USD 0 incremental, cero llamadas a red).
+> * **Trazabilidad Completa de Proceso (D2):** [docs/TRAZABILIDAD_PROCESO.md](docs/TRAZABILIDAD_PROCESO.md) — La evolución del sistema puede reconstruirse desde cada falla/hallazgo hasta la decisión, cambio y corrida de validación correspondiente.
+> * **Suite de Tests Automatizada (10/10 passing):** Ejecutar `python tests/test_agent.py` para validar tools, sanitización, estrictez TLS, inmutabilidad de hashes, vistas derivadas y consistencia documental de proceso (USD 0 incremental, cero llamadas a red).
 > * **Vistas Estructuradas D3:** Cada corrida principal dispone de vistas aisladas de entrada (`input.json`), salida (`output.json`) y metadatos de ejecución (`metadata.json`).
 > * **Auditoría Económica y Metadata D4:** Documento detallado en [docs/EVIDENCIA_ECONOMICA.md](docs/EVIDENCIA_ECONOMICA.md) con trazabilidad del conteo devuelto por el objeto oficial `usageMetadata` de Google Gemini API y convalidación de costos directos (USD 0).
 
@@ -66,7 +65,7 @@ El sistema desacopla la capa agéntica de cualquier infraestructura corporativa 
 - **Orquestador (`agente/agent_supervisor.py`):** Controla el bucle agéntico, presupuesto de llamadas, sanitización previa de payloads y parseo de salidas.
 - **Cliente LLM REST:** Implementación directa sobre el endpoint `v1beta` de Gemini API sin dependencias de SDKs cerrados.
 - **Herramientas (`agente/agent_tools.py`):** Funciones de inspección matemática y estadística de solo lectura.
-- **Transporte Seguro:** Timeout extendido de 90s, reintento técnico único ante fallas transitorias de servidor (`HTTP 503` / `429`) y validación TLS estricta por defecto (`ssl.create_default_context()`).
+- **Transporte Seguro:** Timeout extendido de 90s, política de máximo 1 reintento técnico por solicitud ante fallas transitorias de red/servidor (`HTTP 503` / `429` / timeout) y validación TLS estricta por defecto (`ssl.create_default_context()`).
 
 Más detalle técnico en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
 
@@ -77,7 +76,7 @@ Más detalle técnico en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
 El comportamiento del agente está gobernado por contratos explícitos en Markdown:
 * **System Prompt Oficial (V0.4):** [prompts/system_prompt.md](prompts/system_prompt.md) — Establece la misión, herramientas declaradas, principios de investigación, criterios de riesgo y esquema JSON exigido.
 * **User Prompts Evaluados:** [prompts/user_prompt.md](prompts/user_prompt.md) — Consignas estandarizadas de prueba para horizontes de 1, 3 y 5 días.
-* **Evolución Histórica:** [prompts/HISTORIAL_PROMPTS.md](prompts/HISTORIAL_PROMPTS.md) — Registro de cambios desde V0.1 hasta el congelamiento de V0.4.
+* **Evolución Histórica:** [prompts/HISTORIAL_PROMPTS.md](prompts/HISTORIAL_PROMPTS.md) — Registro de cambios desde el prototipo inicial Pre-V0.3 hasta el congelamiento de V0.4.
 
 ---
 
@@ -154,7 +153,7 @@ Se seleccionaron **tres corridas reales exitosas y contrastadas** como evidencia
 | Corrida | Horizonte / Escenario | Tools | Clasificación | Tokens (usageMetadata) | Latencia | Archivo Primario | Vistas Derivadas (D3) |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **002** | Rutinaria (3 días) | 3 calls | **NORMAL** | 7.649 | 8.66 s | [`run.json`](corridas/corrida_002/run.json) | [`input`](corridas/corrida_002/input.json) \| [`output`](corridas/corrida_002/output.json) \| [`metadata`](corridas/corrida_002/metadata.json) |
-| **006** | Inestabilidad Red (3 días) | 3 calls | **NORMAL** | 8.069 | 104.98 s (2 retries 503) | [`run.json`](corridas/corrida_006/run.json) | [`input`](corridas/corrida_006/input.json) \| [`output`](corridas/corrida_006/output.json) \| [`metadata`](corridas/corrida_006/metadata.json) |
+| **006** | Inestabilidad Red (3 días) | 3 calls | **NORMAL** | 8.069 | 104.98 s (2 retries 503 totales en solicitudes distintas; máx 1/solicitud) | [`run.json`](corridas/corrida_006/run.json) | [`input`](corridas/corrida_006/input.json) \| [`output`](corridas/corrida_006/output.json) \| [`metadata`](corridas/corrida_006/metadata.json) |
 | **007** | Frío Extremo (5 días, Tmin 1.9°C) | 3 calls | **OBSERVAR** | 8.756 | 33.93 s | [`run.json`](corridas/corrida_007/run.json) | [`input`](corridas/corrida_007/input.json) \| [`output`](corridas/corrida_007/output.json) \| [`metadata`](corridas/corrida_007/metadata.json) |
 
 ---

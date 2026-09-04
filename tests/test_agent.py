@@ -259,6 +259,62 @@ def run_all_tests():
         assert actual_h == expected_h, f"Re-extracción alteró {rpath}"
     print("  -> 9.3: Script de extracción idempotente comprobado; run.json preservado inmutable.")
 
+    # 10. Test de Trazabilidad Documental de Proceso (D2)
+    print("\n--- Test 10: Verificación de Trazabilidad Documental de Proceso (D2) ---")
+    trazabilidad_path = os.path.join(BASE_DIR, "docs", "TRAZABILIDAD_PROCESO.md")
+    decisiones_path = os.path.join(BASE_DIR, "DECISIONES.md")
+    prompts_hist_path = os.path.join(BASE_DIR, "prompts", "HISTORIAL_PROMPTS.md")
+    
+    assert os.path.exists(trazabilidad_path), f"Falta {trazabilidad_path}"
+    assert os.path.exists(decisiones_path), f"Falta {decisiones_path}"
+    assert os.path.exists(prompts_hist_path), f"Falta {prompts_hist_path}"
+    
+    traz_content = open(trazabilidad_path, "r", encoding="utf-8").read()
+    dec_content = open(decisiones_path, "r", encoding="utf-8").read()
+    hist_content = open(prompts_hist_path, "r", encoding="utf-8").read()
+    
+    # 10.1 DEC-001 a DEC-006 existen en DECISIONES.md y TRAZABILIDAD_PROCESO.md
+    for dec_id in ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006"]:
+        assert dec_id in dec_content, f"Falta {dec_id} en DECISIONES.md"
+        assert dec_id in traz_content, f"Falta {dec_id} en TRAZABILIDAD_PROCESO.md"
+    print("  -> 10.1: DEC-001 a DEC-006 verificadas en DECISIONES.md y TRAZABILIDAD_PROCESO.md.")
+
+    # 10.2 Cada DEC tiene campos explícitos requeridos en DECISIONES.md
+    required_fields = ["Evidencia de origen:", "Artefactos modificados:", "Corrida(s) de validación:", "Resultado:", "Estado:"]
+    for dec_id in ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006"]:
+        dec_pos = dec_content.find(f"## {dec_id}")
+        next_dec = dec_content.find("## DEC-", dec_pos + 10)
+        chunk = dec_content[dec_pos:next_dec] if next_dec != -1 else dec_content[dec_pos:]
+        for rf in required_fields:
+            assert rf in chunk, f"Falta '{rf}' en {dec_id} en DECISIONES.md"
+    print("  -> 10.2: Campos explícitos de evidencia, artefactos, validación, resultado y estado validados en todas las DEC.")
+
+    # 10.3 Las corridas 001 a 007 están referenciadas en la historia experimental
+    for cid in ["Corrida 001", "Corrida 002", "Corrida 003", "Corrida 004", "Corrida 005", "Corrida 006", "Corrida 007"]:
+        assert cid in traz_content, f"Falta {cid} en TRAZABILIDAD_PROCESO.md"
+    print("  -> 10.3: Corridas 001 a 007 referenciadas unívocamente en la historia experimental.")
+
+    # 10.4 Coherencia de versiones de prompt con documentación
+    prompt_version_map = {
+        "corrida_003": "sacme-supervisor-v0.3",
+        "corrida_004": "sacme-supervisor-v0.3",
+        "corrida_005": "sacme-supervisor-v0.4",
+        "corrida_006": "sacme-supervisor-v0.4",
+        "corrida_007": "sacme-supervisor-v0.4",
+    }
+    for cid, exp_pv in prompt_version_map.items():
+        rp = os.path.join(CORRIDAS_DIR, cid if cid in ["corrida_002", "corrida_006", "corrida_007"] else os.path.join("evidencia_iteracion", cid), "run.json")
+        with open(rp, "r", encoding="utf-8") as f:
+            rd = json.load(f)
+            assert rd.get("prompt_version") == exp_pv, f"Inconsistencia en {cid}: {rd.get('prompt_version')} != {exp_pv}"
+    print("  -> 10.4: Versiones de prompt en run.json coinciden con la matriz de trazabilidad y el historial de prompts.")
+
+    # 10.5 Inmutabilidad criptográfica de los 7 run.json
+    for rpath, expected_h in OFFICIAL_RUN_HASHES.items():
+        actual_h = hashlib.sha256(open(rpath, "rb").read()).hexdigest()
+        assert actual_h == expected_h, f"Hash alterado en {rpath}: {actual_h} != {expected_h}"
+    print("  -> 10.5: Inmutabilidad de los 7 archivos run.json re-verificada al 100%.")
+
     print("\n" + "=" * 70)
     print("TODOS LOS TESTS PASARON EXITOSAMENTE (REPOSITORIO ACADÉMICO 100% VÁLIDO)")
     print("=" * 70)
