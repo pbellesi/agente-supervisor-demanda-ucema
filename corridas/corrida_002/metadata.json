@@ -1,0 +1,172 @@
+{
+  "id_corrida": "corrida_002",
+  "run_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "timestamp_inicio": "2026-09-03T16:03:32.791365",
+  "timestamp_fin": "2026-09-03T16:03:41.453232",
+  "duracion_segundos": 8.662,
+  "latencia_total_ms": 8661.87,
+  "executionMode": "real",
+  "modelo": "gemini-3.1-flash-lite",
+  "proveedor": "gemini_rest",
+  "prompt_version": null,
+  "timeout_seconds": 90,
+  "tools_invocadas": [
+    {
+      "iteracion": 1,
+      "tool_name": "consultar_pronostico_y_demanda_estimada",
+      "args": {
+        "dias_horizonte": 3
+      },
+      "result": {
+        "fuente": "Open-Meteo API + Modelo Cuadrático SACME (data.js)",
+        "dias_horizonte": 3,
+        "predicciones": [
+          {
+            "fecha": "2026-09-03",
+            "dia_semana": "Jueves",
+            "es_fin_de_semana": false,
+            "temp_max_c": 18.0,
+            "temp_min_c": 12.6,
+            "regimen_termico": "CALOR",
+            "weathercode_wmo": 55,
+            "edenor_demanda_pico_estimada_mw": 3656,
+            "gba_demanda_pico_estimada_mw": 7134
+          },
+          {
+            "fecha": "2026-09-04",
+            "dia_semana": "Viernes",
+            "es_fin_de_semana": false,
+            "temp_max_c": 16.7,
+            "temp_min_c": 7.8,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 2,
+            "edenor_demanda_pico_estimada_mw": 4437,
+            "gba_demanda_pico_estimada_mw": 8632
+          },
+          {
+            "fecha": "2026-09-05",
+            "dia_semana": "Sábado",
+            "es_fin_de_semana": true,
+            "temp_max_c": 12.3,
+            "temp_min_c": 6.2,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 51,
+            "edenor_demanda_pico_estimada_mw": 4423,
+            "gba_demanda_pico_estimada_mw": 8588
+          }
+        ],
+        "resumen_periodo": {
+          "pico_maximo_edenor_mw": 4437,
+          "fecha_pico_maximo": "2026-09-04",
+          "temperatura_minima_periodo_c": 6.2,
+          "temperatura_maxima_periodo_c": 18.0,
+          "alerta_umbral_estatico_5500mw": false
+        }
+      },
+      "latency_ms": 2767.42,
+      "error": null
+    },
+    {
+      "iteracion": 2,
+      "tool_name": "consultar_metricas_error_historico",
+      "args": {
+        "anticipacion_dias": 2
+      },
+      "result": {
+        "anticipacion_dias": 2,
+        "total_dias_evaluados": 29,
+        "error_porcentual_medio_pct": 5.54,
+        "error_absoluto_medio_mae_pct": 7.4,
+        "desvio_maximo_subestimacion_pct": -15.46,
+        "desvio_maximo_sobreestimacion_pct": 23.22,
+        "tendencia_sesgo": "SOBREESTIMACION_SISTEMATICA (El modelo suele proyectar por encima de la demanda real)",
+        "ultimas_observaciones_recientes": [
+          {
+            "fecha": "2026-08-23",
+            "dia": "Domingo",
+            "simulado_mw": 4635,
+            "real_cammesa_mw": 4359,
+            "error_pct": 6.33
+          },
+          {
+            "fecha": "2026-08-26",
+            "dia": "Miércoles",
+            "simulado_mw": 4595,
+            "real_cammesa_mw": 4146,
+            "error_pct": 10.83
+          },
+          {
+            "fecha": "2026-08-27",
+            "dia": "Jueves",
+            "simulado_mw": 3592,
+            "real_cammesa_mw": 4249,
+            "error_pct": -15.46
+          },
+          {
+            "fecha": "2026-08-30",
+            "dia": "Domingo",
+            "simulado_mw": 3858,
+            "real_cammesa_mw": 3131,
+            "error_pct": 23.22
+          },
+          {
+            "fecha": "2026-09-02",
+            "dia": "Miércoles",
+            "simulado_mw": 3394,
+            "real_cammesa_mw": 3402,
+            "error_pct": -0.24
+          }
+        ]
+      },
+      "latency_ms": 1073.83,
+      "error": null
+    },
+    {
+      "iteracion": 3,
+      "tool_name": "consultar_consistencia_datos_base",
+      "args": {},
+      "result": {
+        "estado_consistencia": "CON_DISCONTINUIDADES",
+        "tiene_dias_faltantes": true,
+        "dias_faltantes_detectados": [
+          "30/09/2025",
+          "09/12/2025"
+        ],
+        "total_dias_registrados_sacme": 606,
+        "rango_fechas_disponible": {
+          "desde": "2025-01-01",
+          "hasta": "2026-08-31"
+        },
+        "impacto_en_modelo": "Bajo: los gaps reportados son fechas históricas aisladas que no impiden la simulación actual."
+      },
+      "latency_ms": 2360.68,
+      "error": null
+    }
+  ],
+  "cantidad_tool_calls": 3,
+  "retries": {
+    "retry_count": 0,
+    "detalle": []
+  },
+  "errores": [],
+  "tokens": {
+    "input_tokens": 6976,
+    "output_tokens": 673,
+    "total_tokens": 7649,
+    "estado_conteo": "REPORTADO_POR_API",
+    "fuente_conteo": "usageMetadata devuelto por Google Gemini API y preservado en run.json"
+  },
+  "economia": {
+    "api_cost_usd": 0,
+    "incremental_cost_usd": 0,
+    "cost_basis": "GOOGLE_GEMINI_FREE_TIER",
+    "pricing_tier": "FREE_TIER",
+    "billing_status": "USER_VERIFIED_NO_BILLING",
+    "user_confirmed_free_tier": true,
+    "factura_proveedor_disponible": false,
+    "motivo_sin_factura": "Ejecución bajo Free Tier sin facturación habilitada (USD 0 incremental)"
+  },
+  "sha256_run_json": "cd2561ba4acafd92f3be088f5615ae1aca7017808bf7f3f296ba85793dfb04a7",
+  "source_run_json": "run.json",
+  "nota_metodologica": "Vista derivada de run.json con metadata técnica y económica para facilitar la trazabilidad forense sin alterar la evidencia primaria inmutable."
+}

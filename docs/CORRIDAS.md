@@ -42,6 +42,29 @@ Todas las corridas presentadas son **reales**, fueron ejecutadas en un entorno d
 
 ---
 
+
+### 2.4 Desglose de Entrada, Salida y Metadatos del Proveedor (D3 y D4)
+
+Para maximizar la auditabilidad y facilitar la inspección por parte de evaluadores humanos o agentes automatizados que requieren acceder aisladamente a la consigna de entrada, al dictamen producido o a los metadatos de consumo del proveedor, cada una de las tres corridas principales cuenta con archivos complementarios normalizados (`input.json`, `output.json`, `metadata.json`), derivados determinísticamente mediante el script `scripts/extract_academic_evidence.py`.
+
+> [!NOTE]
+> **Nota Metodológica de Trazabilidad e Inmutabilidad:**
+> El archivo primario de auditoría sigue siendo `run.json`, preservado exactamente en el formato y contenido generado en tiempo de ejecución. Los archivos `input.json`, `output.json` y `metadata.json` no reemplazan ni alteran `run.json`; son vistas estructuradas de solo lectura proyectadas para facilitar la verificación inmediata de dimensiones D3 y D4.
+
+| Corrida | Archivo Derivado | Contenido Específico Preservado | Tamaño | Hash SHA-256 |
+| :---: | :--- | :--- | :---: | :--- |
+| **002** | [`input.json`](../corridas/corrida_002/input.json) | Consigna de usuario, system prompt v0.2, payload inicial y parámetros | 8.622 B | `1d4cc7728759906d01ec4c4bf15696ef587146e67c8ca3c15a7088a7d4db5cd1` |
+| **002** | [`output.json`](../corridas/corrida_002/output.json) | Dictamen técnico estructurado (`NORMAL`, 4.437 MW) y bloque L2 | 5.407 B | `db9eefadfc96d46a2645e639ede782ab886931a8201f942ed3f7763afd3d0ca1` |
+| **002** | [`metadata.json`](../corridas/corrida_002/metadata.json) | Timestamps, latencia (8.66s), 3 tools, usageMetadata (7.649 tokens), USD 0 | 5.641 B | `cbfa43473d329779998e4fc350a7ed0ea031f985498aac9475a5a4ff556fc822` |
+| **006** | [`input.json`](../corridas/corrida_006/input.json) | Consigna de usuario, system prompt v0.4, payload inicial y parámetros | 10.326 B | `2303ba90d90b04b614af0155af407a6e724583e173ef74e23defbd7d55a44558` |
+| **006** | [`output.json`](../corridas/corrida_006/output.json) | Dictamen técnico estructurado (`NORMAL`, 4.508 MW) y bloque L2 | 5.445 B | `ea77129995c7564da9d4f6a77e6bc8a65ce075d8f48cb224ce8b56efba051b3c` |
+| **006** | [`metadata.json`](../corridas/corrida_006/metadata.json) | Timestamps, latencia (104.98s), 2 retries 503, usageMetadata (8.069 tokens), USD 0 | 6.417 B | `4ab00f00e529a871afe8a0e3eeb8ea61162d12160579b19e2c7743ee35b4c5c0` |
+| **007** | [`input.json`](../corridas/corrida_007/input.json) | Consigna de usuario, system prompt v0.4, payload inicial y parámetros | 10.326 B | `2b8af9c14e5df80589ba408929729bb8efdde31ce9dca8c228a3f7ed940a5f6e` |
+| **007** | [`output.json`](../corridas/corrida_007/output.json) | Dictamen técnico estructurado (`OBSERVAR`, 5.006 MW) y bloque L2 | 5.874 B | `439e37935fccbfcb0f0abe1b335cf368fa98191d8a476e4a89ccc55a90eb7d2c` |
+| **007** | [`metadata.json`](../corridas/corrida_007/metadata.json) | Timestamps, latencia (33.93s), 3 tools, usageMetadata (8.756 tokens), USD 0 | 6.429 B | `bdb5f9c791c1fa62ecd33a47ad2827f4ae381ca2f0e3fcfeb2190b1644256cb3` |
+
+---
+
 ## 3. Corridas de Iteración, Contingencia y Gobierno
 
 * **Corrida 001 (`evidencia_iteracion/corrida_001/run.json`):** Aprovisionamiento y obsolescencia de modelos comerciales (`HTTP 404` en Gemini 2.5 Flash).

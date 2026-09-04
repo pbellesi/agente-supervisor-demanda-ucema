@@ -1,0 +1,192 @@
+{
+  "id_corrida": "corrida_006",
+  "run_id": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp_inicio": "2026-09-03T16:30:02.483221",
+  "timestamp_fin": "2026-09-03T16:31:47.462586",
+  "duracion_segundos": 104.979,
+  "latencia_total_ms": 104979.37,
+  "executionMode": "real",
+  "modelo": "gemini-3.1-flash-lite",
+  "proveedor": "gemini_rest",
+  "prompt_version": "sacme-supervisor-v0.4",
+  "timeout_seconds": 90,
+  "tools_invocadas": [
+    {
+      "iteracion": 1,
+      "tool_name": "consultar_pronostico_y_demanda_estimada",
+      "args": {
+        "dias_horizonte": 3
+      },
+      "result": {
+        "fuente": "Open-Meteo API + Modelo Cuadrático SACME (data.js)",
+        "dias_horizonte": 3,
+        "predicciones": [
+          {
+            "fecha": "2026-09-03",
+            "dia_semana": "Jueves",
+            "es_fin_de_semana": false,
+            "temp_max_c": 18.5,
+            "temp_min_c": 12.6,
+            "regimen_termico": "CALOR",
+            "weathercode_wmo": 55,
+            "edenor_demanda_pico_estimada_mw": 3603,
+            "gba_demanda_pico_estimada_mw": 7028
+          },
+          {
+            "fecha": "2026-09-04",
+            "dia_semana": "Viernes",
+            "es_fin_de_semana": false,
+            "temp_max_c": 16.2,
+            "temp_min_c": 7.6,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 2,
+            "edenor_demanda_pico_estimada_mw": 4508,
+            "gba_demanda_pico_estimada_mw": 8764
+          },
+          {
+            "fecha": "2026-09-05",
+            "dia_semana": "Sábado",
+            "es_fin_de_semana": true,
+            "temp_max_c": 12.9,
+            "temp_min_c": 6.9,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 51,
+            "edenor_demanda_pico_estimada_mw": 4306,
+            "gba_demanda_pico_estimada_mw": 8380
+          }
+        ],
+        "resumen_periodo": {
+          "pico_maximo_edenor_mw": 4508,
+          "fecha_pico_maximo": "2026-09-04",
+          "temperatura_minima_periodo_c": 6.9,
+          "temperatura_maxima_periodo_c": 18.5,
+          "alerta_umbral_estatico_5500mw": false
+        }
+      },
+      "latency_ms": 1669.18,
+      "error": null
+    },
+    {
+      "iteracion": 2,
+      "tool_name": "consultar_metricas_error_historico",
+      "args": {
+        "anticipacion_dias": 2
+      },
+      "result": {
+        "anticipacion_dias": 2,
+        "total_dias_evaluados": 29,
+        "error_porcentual_medio_pct": 5.54,
+        "error_absoluto_medio_mae_pct": 7.4,
+        "desvio_maximo_subestimacion_pct": -15.46,
+        "desvio_maximo_sobreestimacion_pct": 23.22,
+        "tendencia_sesgo": "SOBREESTIMACION_SISTEMATICA (El modelo suele proyectar por encima de la demanda real)",
+        "ultimas_observaciones_recientes": [
+          {
+            "fecha": "2026-08-23",
+            "dia": "Domingo",
+            "simulado_mw": 4635,
+            "real_cammesa_mw": 4359,
+            "error_pct": 6.33
+          },
+          {
+            "fecha": "2026-08-26",
+            "dia": "Miércoles",
+            "simulado_mw": 4595,
+            "real_cammesa_mw": 4146,
+            "error_pct": 10.83
+          },
+          {
+            "fecha": "2026-08-27",
+            "dia": "Jueves",
+            "simulado_mw": 3592,
+            "real_cammesa_mw": 4249,
+            "error_pct": -15.46
+          },
+          {
+            "fecha": "2026-08-30",
+            "dia": "Domingo",
+            "simulado_mw": 3858,
+            "real_cammesa_mw": 3131,
+            "error_pct": 23.22
+          },
+          {
+            "fecha": "2026-09-02",
+            "dia": "Miércoles",
+            "simulado_mw": 3394,
+            "real_cammesa_mw": 3402,
+            "error_pct": -0.24
+          }
+        ]
+      },
+      "latency_ms": 21706.98,
+      "error": null
+    },
+    {
+      "iteracion": 3,
+      "tool_name": "consultar_consistencia_datos_base",
+      "args": {},
+      "result": {
+        "estado_consistencia": "CON_DISCONTINUIDADES",
+        "tiene_dias_faltantes": true,
+        "dias_faltantes_detectados": [
+          "30/09/2025",
+          "09/12/2025"
+        ],
+        "total_dias_registrados_sacme": 606,
+        "rango_fechas_disponible": {
+          "desde": "2025-01-01",
+          "hasta": "2026-08-31"
+        },
+        "impacto_en_modelo": "Bajo: los gaps reportados son fechas históricas aisladas que no impiden la simulación actual."
+      },
+      "latency_ms": 1573.46,
+      "error": null
+    }
+  ],
+  "cantidad_tool_calls": 3,
+  "retries": {
+    "retry_count": 2,
+    "detalle": [
+      {
+        "iteracion": 1,
+        "request_attempt": 1,
+        "retry_reason": "HTTP_503_TRANSIENT",
+        "error_original": "HTTPError 503: Service Unavailable",
+        "timeout_seconds": 90,
+        "timestamp": "2026-09-03T16:30:26.385049"
+      },
+      {
+        "iteracion": 4,
+        "request_attempt": 1,
+        "retry_reason": "HTTP_503_TRANSIENT",
+        "error_original": "HTTPError 503: Service Unavailable",
+        "timeout_seconds": 90,
+        "timestamp": "2026-09-03T16:31:42.398016"
+      }
+    ]
+  },
+  "errores": [
+    "[RETRY] Reintentando llamada (1/2) tras error transitorio: HTTPError 503: Service Unavailable",
+    "[RETRY] Reintentando llamada (1/2) tras error transitorio: HTTPError 503: Service Unavailable"
+  ],
+  "tokens": {
+    "input_tokens": 7438,
+    "output_tokens": 631,
+    "total_tokens": 8069,
+    "estado_conteo": "REPORTADO_POR_API",
+    "fuente_conteo": "usageMetadata devuelto por Google Gemini API y preservado en run.json"
+  },
+  "economia": {
+    "api_cost_usd": 0,
+    "incremental_cost_usd": 0,
+    "cost_basis": "GOOGLE_GEMINI_FREE_TIER",
+    "pricing_tier": "FREE_TIER",
+    "billing_status": "USER_VERIFIED_NO_BILLING",
+    "user_confirmed_free_tier": true,
+    "factura_proveedor_disponible": false,
+    "motivo_sin_factura": "Ejecución bajo Free Tier sin facturación habilitada (USD 0 incremental)"
+  },
+  "sha256_run_json": "c282f6416a8f37948dc6b06d602071b8bd03a8a3931ad703b7a7cc66e5bd092c",
+  "source_run_json": "run.json",
+  "nota_metodologica": "Vista derivada de run.json con metadata técnica y económica para facilitar la trazabilidad forense sin alterar la evidencia primaria inmutable."
+}

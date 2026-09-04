@@ -1,0 +1,61 @@
+{
+  "id_corrida": "corrida_007",
+  "run_id": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp_fin": "2026-09-03T16:33:32.387820",
+  "clasificacion_riesgo": "OBSERVAR",
+  "suficiencia_informacion": "COMPLETA",
+  "pico_maximo_estimado_mw": 5006,
+  "factor_causal_principal": "Descenso de temperaturas mínimas (hasta 1.9°C) que incrementa la demanda por calefacción.",
+  "analisis_tecnico": "La demanda proyectada para el periodo se mantiene por debajo del umbral crítico de 5500 MW. Aunque se observa un incremento hacia el final del periodo debido a condiciones de frío (mínimas de hasta 1.9°C el 06/09), el sesgo histórico del modelo hacia la sobreestimación (error medio del 5.54%) actúa como un factor de seguridad conservador. La clasificación 'OBSERVAR' se justifica por la proximidad al umbral de 5000 MW y la inercia térmica esperada tras el evento de frío del domingo.",
+  "recomendacion_operativa": "Mantener monitoreo preventivo de la demanda real frente a la proyectada, aprovechando el sesgo de sobreestimación del modelo. No se requieren acciones de despacho extraordinarias en este momento.",
+  "dictamen_estructurado": {
+    "id_evaluacion": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-09-03T10:00:00Z",
+    "periodo_evaluado": {
+      "desde": "2026-09-03",
+      "hasta": "2026-09-07"
+    },
+    "clasificacion_riesgo": "OBSERVAR",
+    "suficiencia_informacion": "COMPLETA",
+    "pico_maximo_estimado_mw": 5006,
+    "factor_causal_principal": "Descenso de temperaturas mínimas (hasta 1.9°C) que incrementa la demanda por calefacción.",
+    "evidencias_consultadas": [
+      {
+        "herramienta": "consultar_pronostico_y_demanda_estimada",
+        "hallazgo_clave": "Pico de demanda proyectado en 5006 MW para el 07/09 con temperaturas mínimas de 7.5°C tras un evento de frío intenso el 06/09 (1.9°C)."
+      },
+      {
+        "herramienta": "consultar_metricas_error_historico",
+        "hallazgo_clave": "El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser inferior a la proyectada."
+      },
+      {
+        "herramienta": "consultar_consistencia_datos_base",
+        "hallazgo_clave": "Base de datos con discontinuidades menores, sin impacto significativo en la confiabilidad del pronóstico actual."
+      }
+    ],
+    "analisis_tecnico": "La demanda proyectada para el periodo se mantiene por debajo del umbral crítico de 5500 MW. Aunque se observa un incremento hacia el final del periodo debido a condiciones de frío (mínimas de hasta 1.9°C el 06/09), el sesgo histórico del modelo hacia la sobreestimación (error medio del 5.54%) actúa como un factor de seguridad conservador. La clasificación 'OBSERVAR' se justifica por la proximidad al umbral de 5000 MW y la inercia térmica esperada tras el evento de frío del domingo.",
+    "recomendacion_operativa": "Mantener monitoreo preventivo de la demanda real frente a la proyectada, aprovechando el sesgo de sobreestimación del modelo. No se requieren acciones de despacho extraordinarias en este momento.",
+    "requiere_intervencion_humana": false
+  },
+  "respuesta_raw_modelo": "{\n  \"id_evaluacion\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"timestamp\": \"2026-09-03T10:00:00Z\",\n  \"periodo_evaluado\": {\n    \"desde\": \"2026-09-03\",\n    \"hasta\": \"2026-09-07\"\n  },\n  \"clasificacion_riesgo\": \"OBSERVAR\",\n  \"suficiencia_informacion\": \"COMPLETA\",\n  \"pico_maximo_estimado_mw\": 5006,\n  \"factor_causal_principal\": \"Descenso de temperaturas mínimas (hasta 1.9°C) que incrementa la demanda por calefacción.\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"consultar_pronostico_y_demanda_estimada\",\n      \"hallazgo_clave\": \"Pico de demanda proyectado en 5006 MW para el 07/09 con temperaturas mínimas de 7.5°C tras un evento de frío intenso el 06/09 (1.9°C).\"\n    },\n    {\n      \"herramienta\": \"consultar_metricas_error_historico\",\n      \"hallazgo_clave\": \"El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser inferior a la proyectada.\"\n    },\n    {\n      \"herramienta\": \"consultar_consistencia_datos_base\",\n      \"hallazgo_clave\": \"Base de datos con discontinuidades menores, sin impacto significativo en la confiabilidad del pronóstico actual.\"\n    }\n  ],\n  \"analisis_tecnico\": \"La demanda proyectada para el periodo se mantiene por debajo del umbral crítico de 5500 MW. Aunque se observa un incremento hacia el final del periodo debido a condiciones de frío (mínimas de hasta 1.9°C el 06/09), el sesgo histórico del modelo hacia la sobreestimación (error medio del 5.54%) actúa como un factor de seguridad conservador. La clasificación 'OBSERVAR' se justifica por la proximidad al umbral de 5000 MW y la inercia térmica esperada tras el evento de frío del domingo.\",\n  \"recomendacion_operativa\": \"Mantener monitoreo preventivo de la demanda real frente a la proyectada, aprovechando el sesgo de sobreestimación del modelo. No se requieren acciones de despacho extraordinarias en este momento.\",\n  \"requiere_intervencion_humana\": false\n}",
+  "humanDecision": {
+    "status": "pending",
+    "operador": null,
+    "timestamp_decision": null,
+    "comentario": null
+  },
+  "validation_status": {
+    "valido": true,
+    "parseo_json": true,
+    "cumple_schema_salida": true
+  },
+  "security": {
+    "payload_sanitized": true,
+    "contains_email_content": false,
+    "contains_file_paths": false,
+    "contains_credentials": false,
+    "contains_raw_pdf": false
+  },
+  "source_run_json": "run.json",
+  "nota_metodologica": "Vista derivada de run.json para facilitar la evaluación automatizada de la salida sin alterar la evidencia primaria inmutable."
+}

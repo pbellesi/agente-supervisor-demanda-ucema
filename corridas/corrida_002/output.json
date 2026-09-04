@@ -1,0 +1,61 @@
+{
+  "id_corrida": "corrida_002",
+  "run_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "timestamp_fin": "2026-09-03T16:03:41.453232",
+  "clasificacion_riesgo": "NORMAL",
+  "suficiencia_informacion": "COMPLETA",
+  "pico_maximo_estimado_mw": 4437,
+  "factor_causal_principal": "Condiciones térmicas moderadas con temperaturas mínimas en descenso hacia el fin de semana.",
+  "analisis_tecnico": "La demanda proyectada para el periodo se mantiene por debajo de los 4500 MW, situándose en niveles operativos normales para Edenor. Aunque se observa un descenso en las temperaturas mínimas (llegando a 6.2°C el sábado), el modelo predictivo tiende históricamente a sobreestimar la demanda, lo que proporciona un margen de seguridad conservador. No se detectan condiciones de ola de frío severa ni riesgos de saturación de demanda.",
+  "recomendacion_operativa": "Mantener monitoreo preventivo estándar. No se requieren acciones extraordinarias de despacho dado el sesgo de sobreestimación del modelo.",
+  "dictamen_estructurado": {
+    "id_evaluacion": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "timestamp": "2026-09-03T10:00:00Z",
+    "periodo_evaluado": {
+      "desde": "2026-09-03",
+      "hasta": "2026-09-05"
+    },
+    "clasificacion_riesgo": "NORMAL",
+    "suficiencia_informacion": "COMPLETA",
+    "pico_maximo_estimado_mw": 4437,
+    "factor_causal_principal": "Condiciones térmicas moderadas con temperaturas mínimas en descenso hacia el fin de semana.",
+    "evidencias_consultadas": [
+      {
+        "herramienta": "consultar_pronostico_y_demanda_estimada",
+        "hallazgo_clave": "Demanda pico proyectada de 4437 MW para el 04/09, por debajo del umbral de alerta de 5500 MW."
+      },
+      {
+        "herramienta": "consultar_metricas_error_historico",
+        "hallazgo_clave": "El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser incluso menor a la proyectada."
+      },
+      {
+        "herramienta": "consultar_consistencia_datos_base",
+        "hallazgo_clave": "Base de datos con discontinuidades menores que no afectan la integridad del pronóstico actual."
+      }
+    ],
+    "analisis_tecnico": "La demanda proyectada para el periodo se mantiene por debajo de los 4500 MW, situándose en niveles operativos normales para Edenor. Aunque se observa un descenso en las temperaturas mínimas (llegando a 6.2°C el sábado), el modelo predictivo tiende históricamente a sobreestimar la demanda, lo que proporciona un margen de seguridad conservador. No se detectan condiciones de ola de frío severa ni riesgos de saturación de demanda.",
+    "recomendacion_operativa": "Mantener monitoreo preventivo estándar. No se requieren acciones extraordinarias de despacho dado el sesgo de sobreestimación del modelo.",
+    "requiere_intervencion_humana": false
+  },
+  "respuesta_raw_modelo": "{\n  \"id_evaluacion\": \"a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d\",\n  \"timestamp\": \"2026-09-03T10:00:00Z\",\n  \"periodo_evaluado\": {\n    \"desde\": \"2026-09-03\",\n    \"hasta\": \"2026-09-05\"\n  },\n  \"clasificacion_riesgo\": \"NORMAL\",\n  \"suficiencia_informacion\": \"COMPLETA\",\n  \"pico_maximo_estimado_mw\": 4437,\n  \"factor_causal_principal\": \"Condiciones térmicas moderadas con temperaturas mínimas en descenso hacia el fin de semana.\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"consultar_pronostico_y_demanda_estimada\",\n      \"hallazgo_clave\": \"Demanda pico proyectada de 4437 MW para el 04/09, por debajo del umbral de alerta de 5500 MW.\"\n    },\n    {\n      \"herramienta\": \"consultar_metricas_error_historico\",\n      \"hallazgo_clave\": \"El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser incluso menor a la proyectada.\"\n    },\n    {\n      \"herramienta\": \"consultar_consistencia_datos_base\",\n      \"hallazgo_clave\": \"Base de datos con discontinuidades menores que no afectan la integridad del pronóstico actual.\"\n    }\n  ],\n  \"analisis_tecnico\": \"La demanda proyectada para el periodo se mantiene por debajo de los 4500 MW, situándose en niveles operativos normales para Edenor. Aunque se observa un descenso en las temperaturas mínimas (llegando a 6.2°C el sábado), el modelo predictivo tiende históricamente a sobreestimar la demanda, lo que proporciona un margen de seguridad conservador. No se detectan condiciones de ola de frío severa ni riesgos de saturación de demanda.\",\n  \"recomendacion_operativa\": \"Mantener monitoreo preventivo estándar. No se requieren acciones extraordinarias de despacho dado el sesgo de sobreestimación del modelo.\",\n  \"requiere_intervencion_humana\": false\n}",
+  "humanDecision": {
+    "status": "pending",
+    "operador": null,
+    "timestamp_decision": null,
+    "comentario": null
+  },
+  "validation_status": {
+    "valido": true,
+    "parseo_json": true,
+    "cumple_schema_salida": true
+  },
+  "security": {
+    "payload_sanitized": true,
+    "contains_email_content": false,
+    "contains_file_paths": false,
+    "contains_credentials": false,
+    "contains_raw_pdf": false
+  },
+  "source_run_json": "run.json",
+  "nota_metodologica": "Vista derivada de run.json para facilitar la evaluación automatizada de la salida sin alterar la evidencia primaria inmutable."
+}

@@ -16,6 +16,20 @@ El desarrollo fue construido **sin frameworks de abstracción opaca** (cero depe
 
 ---
 
+---
+
+## Evidencia clave y acceso rápido (D3 / D4)
+
+> [!IMPORTANT]
+> **Preservación Inmutable y Trazabilidad Forense:**
+> Todas las corridas reportadas provienen de ejecuciones reales contra Google Gemini Free Tier y están preservadas inmutables en `corridas/`. Para máxima transparencia y evaluación automatizada según las dimensiones D3 (reproducibilidad/formatos) y D4 (economía/metadata):
+> 
+> * **Suite de Tests Automatizada (9/9 passing):** Ejecutar `python tests/test_agent.py` para validar tools, sanitización, estrictez TLS, inmutabilidad de hashes y coherencia de vistas derivadas (USD 0 incremental, cero llamadas a red).
+> * **Vistas Estructuradas D3:** Cada corrida principal dispone de vistas aisladas de entrada (`input.json`), salida (`output.json`) y metadatos de ejecución (`metadata.json`).
+> * **Auditoría Económica y Metadata D4:** Documento detallado en [docs/EVIDENCIA_ECONOMICA.md](docs/EVIDENCIA_ECONOMICA.md) con trazabilidad del conteo devuelto por el objeto oficial `usageMetadata` de Google Gemini API y convalidación de costos directos (USD 0).
+
+---
+
 ## Problema real
 
 En la operación de distribución eléctrica, la demanda de potencia presenta una alta sensibilidad a la temperatura ambiente (efecto de inercia térmica en olas de calor o frío). Los modelos predictivos existentes estiman curvas de carga, pero no razonan sobre sus propios márgenes de error ni determinan si una condición meteorológica amerita elevar el nivel de vigilancia operativa o solicitar revisiones de despacho a CAMMESA.
@@ -137,21 +151,25 @@ Más detalle de gobierno en [docs/GOBIERNO_Y_RIESGOS.md](docs/GOBIERNO_Y_RIESGOS
 
 Se seleccionaron **tres corridas reales exitosas y contrastadas** como evidencia demostrativa central:
 
-| Corrida | Contexto / Horizonte | Tools Invocadas | Clasificación | Tokens | Latencia | Resultado y Dictamen |
-| :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| **[002](corridas/corrida_002/run.json)** | Evaluación rutinaria (3 días) | 3 calls | **NORMAL** | 7.649 | 8.66 s | Pico 4.437 MW. Convalida el circuito agéntico base con Gemini 3.1 Flash-Lite. |
-| **[006](corridas/corrida_006/run.json)** | Evaluación estándar (3 días) | 3 calls | **NORMAL** | 8.069 | 104.98 s | Pico 4.508 MW. Resiliencia probada: superó 2 errores transitorios HTTP 503 mediante retry. |
-| **[007](corridas/corrida_007/run.json)** | Estrés térmico extendido (5 días) | 3 calls | **OBSERVAR** | 8.756 | 33.93 s | Pico 5.006 MW, Tmin 1.9°C. Discriminación de riesgo ante ola polar e inercia térmica. |
+| Corrida | Horizonte / Escenario | Tools | Clasificación | Tokens (usageMetadata) | Latencia | Archivo Primario | Vistas Derivadas (D3) |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **002** | Rutinaria (3 días) | 3 calls | **NORMAL** | 7.649 | 8.66 s | [`run.json`](corridas/corrida_002/run.json) | [`input`](corridas/corrida_002/input.json) \| [`output`](corridas/corrida_002/output.json) \| [`metadata`](corridas/corrida_002/metadata.json) |
+| **006** | Inestabilidad Red (3 días) | 3 calls | **NORMAL** | 8.069 | 104.98 s (2 retries 503) | [`run.json`](corridas/corrida_006/run.json) | [`input`](corridas/corrida_006/input.json) \| [`output`](corridas/corrida_006/output.json) \| [`metadata`](corridas/corrida_006/metadata.json) |
+| **007** | Frío Extremo (5 días, Tmin 1.9°C) | 3 calls | **OBSERVAR** | 8.756 | 33.93 s | [`run.json`](corridas/corrida_007/run.json) | [`input`](corridas/corrida_007/input.json) \| [`output`](corridas/corrida_007/output.json) \| [`metadata`](corridas/corrida_007/metadata.json) |
 
 ---
 
 ## Historia de iteración
 
 El repositorio conserva el registro transparente e inmutable de las 4 corridas de contingencia y aprendizaje:
-* **[Corrida 001](corridas/evidencia_iteracion/corrida_001/run.json):** Fallo `HTTP 404 Not Found` en Gemini 2.5 Flash $ightarrow$ motivó [DEC-001](DECISIONES.md#dec-001-cambio-de-gemini-25-flash-a-gemini-31-flash-lite-versión-agéntica-v02) (adopción de Gemini 3.1 Flash-Lite).
-* **[Corrida 003](corridas/evidencia_iteracion/corrida_003/run.json):** Fallo de `Socket Read Timeout` (30s) por proxy de red $ightarrow$ motivó [DEC-003](DECISIONES.md#dec-003-robustez-de-transporte-http-timeout-extendido-y-retry-transitorio) (timeout a 90s y retry).
-* **[Corrida 004](corridas/evidencia_iteracion/corrida_004/run.json):** Fallo `HTTP 503` y detección de sobre-consulta de tools $ightarrow$ motivó [DEC-004](DECISIONES.md#dec-004-evaluación-de-corrida-004-y-refuerzo-de-criterio-para-herramientas-secundarias-v04) (regla de relevancia marginal).
-* **[Corrida 005](corridas/evidencia_iteracion/corrida_005/run.json):** Persistencia de 3/3 tools ante consulta simple $ightarrow$ motivó [DEC-005](DECISIONES.md#dec-005-cierre-de-optimización-de-parada-temprana-y-congelamiento-de-v04) (congelamiento de baseline V0.4 para evitar sesgar artificialmente la autonomía agéntica).
+* **[Corrida 001](corridas/evidencia_iteracion/corrida_001/run.json):** Fallo `HTTP 404 Not Found` en Gemini 2.5 Flash $
+ightarrow$ motivó [DEC-001](DECISIONES.md#dec-001-cambio-de-gemini-25-flash-a-gemini-31-flash-lite-versión-agéntica-v02) (adopción de Gemini 3.1 Flash-Lite).
+* **[Corrida 003](corridas/evidencia_iteracion/corrida_003/run.json):** Fallo de `Socket Read Timeout` (30s) por proxy de red $
+ightarrow$ motivó [DEC-003](DECISIONES.md#dec-003-robustez-de-transporte-http-timeout-extendido-y-retry-transitorio) (timeout a 90s y retry).
+* **[Corrida 004](corridas/evidencia_iteracion/corrida_004/run.json):** Fallo `HTTP 503` y detección de sobre-consulta de tools $
+ightarrow$ motivó [DEC-004](DECISIONES.md#dec-004-evaluación-de-corrida-004-y-refuerzo-de-criterio-para-herramientas-secundarias-v04) (regla de relevancia marginal).
+* **[Corrida 005](corridas/evidencia_iteracion/corrida_005/run.json):** Persistencia de 3/3 tools ante consulta simple $
+ightarrow$ motivó [DEC-005](DECISIONES.md#dec-005-cierre-de-optimización-de-parada-temprana-y-congelamiento-de-v04) (congelamiento de baseline V0.4 para evitar sesgar artificialmente la autonomía agéntica).
 
 Detalle cronológico completo en [DECISIONES.md](DECISIONES.md) y [docs/CORRIDAS.md](docs/CORRIDAS.md).
 
@@ -162,8 +180,10 @@ Detalle cronológico completo en [DECISIONES.md](DECISIONES.md) y [docs/CORRIDAS
 * **Costo Real Observado:** **USD 0** (Free Tier de Google AI Studio).
 * **Costo Incremental:** **USD 0** (sin billing habilitado).
 * **Consumo Medio:** ~8.158 tokens totales por corrida exitosa.
-* **Proyección Semanal (7 corridas):** ~57.100 tokens $ightarrow$ Cubierto por Free Tier.
-* **Proyección Anual (365 corridas):** ~2.980.000 tokens $ightarrow$ Cubierto por Free Tier.
+* **Proyección Semanal (7 corridas):** ~57.100 tokens $
+ightarrow$ Cubierto por Free Tier.
+* **Proyección Anual (365 corridas):** ~2.980.000 tokens $
+ightarrow$ Cubierto por Free Tier.
 * **Equivalencia en Paid Tier:** `PENDIENTE_VERIFICACION_PRECIO_OFICIAL` (no se asumen tarifas comerciales no verificadas).
 * **Justificación del Modelo:** `gemini-3.1-flash-lite` representa el modelo más liviano y costo-eficiente con capacidad probada para function calling multi-turno y salida JSON estricta.
 

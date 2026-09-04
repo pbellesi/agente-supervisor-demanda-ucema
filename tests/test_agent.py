@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import hashlib
+import subprocess
 from datetime import datetime
 
 # Rutas del repositorio académico
@@ -177,10 +178,86 @@ def run_all_tests():
         for f in files:
             if f.endswith((".py", ".env", ".example", ".md")):
                 fpath = os.path.join(root, f)
-                content = open(fpath, "r", encoding="utf-8", errors="ignore").read()
+                content_file = open(fpath, "r", encoding="utf-8", errors="ignore").read()
                 for pat in insecure_patterns:
-                    assert pat not in content, f"FALLO DE SEGURIDAD TLS: Patrón prohibido '{pat}' encontrado en {fpath}"
+                    assert pat not in content_file, f"FALLO DE SEGURIDAD TLS: Patrón prohibido '{pat}' encontrado en {fpath}"
     print("  -> Éxito: Cero patrones de bypass TLS encontrados en el repositorio. Validación TLS estricta garantizada.")
+
+    # 9. Test de Evidencia Académica D3/D4 (Proyecciones Derivadas e Idempotencia)
+    print("\n--- Test 9: Verificación de Evidencia Académica D3/D4 (input/output/metadata) ---")
+    
+    # 9.1 Hashes inmutables de referencia oficial de run.json (001-007)
+    OFFICIAL_RUN_HASHES = {
+        os.path.join(CORRIDAS_DIR, "evidencia_iteracion", "corrida_001", "run.json"): "42f8346e2b2f0f8d7fc8e8a2bd605197275307b03d6cb7cbb5a7ef41bdafdf85",
+        os.path.join(CORRIDAS_DIR, "corrida_002", "run.json"): "cd2561ba4acafd92f3be088f5615ae1aca7017808bf7f3f296ba85793dfb04a7",
+        os.path.join(CORRIDAS_DIR, "evidencia_iteracion", "corrida_003", "run.json"): "25ec64ba046861e4afdabe49483039a876947771393b8d2c3926b0a6a97636b5",
+        os.path.join(CORRIDAS_DIR, "evidencia_iteracion", "corrida_004", "run.json"): "ff6f229e1652dd53726a80ae0bb8ee15af4640b77cf4cee1e267582235fa8133",
+        os.path.join(CORRIDAS_DIR, "evidencia_iteracion", "corrida_005", "run.json"): "425319699cbaeaee5999fab93b8c8c55c292137347dbdb3d71eeeb193638789a",
+        os.path.join(CORRIDAS_DIR, "corrida_006", "run.json"): "c282f6416a8f37948dc6b06d602071b8bd03a8a3931ad703b7a7cc66e5bd092c",
+        os.path.join(CORRIDAS_DIR, "corrida_007", "run.json"): "21719d6e2d938dc870ba125b136e5a891e62cf30263a9c42d0dc56736dfeee1f",
+    }
+    
+    for rpath, expected_h in OFFICIAL_RUN_HASHES.items():
+        assert os.path.exists(rpath), f"Archivo {rpath} no existe"
+        actual_h = hashlib.sha256(open(rpath, "rb").read()).hexdigest()
+        assert actual_h == expected_h, f"Hash alterado en {rpath}: {actual_h} != {expected_h}"
+    print("  -> 9.1: Hashes SHA-256 de run.json (001 a 007) 100% verificados contra registro oficial.")
+
+    # 9.2 Presencia y validez de esquema de input.json, output.json, metadata.json
+    for cid in ["corrida_002", "corrida_006", "corrida_007"]:
+        cdir = os.path.join(CORRIDAS_DIR, cid)
+        inp_p = os.path.join(cdir, "input.json")
+        out_p = os.path.join(cdir, "output.json")
+        meta_p = os.path.join(cdir, "metadata.json")
+        
+        for p in [inp_p, out_p, meta_p]:
+            assert os.path.exists(p), f"Falta archivo derivado {p}"
+            assert os.path.getsize(p) > 0, f"Archivo {p} esta vacio"
+        
+        with open(inp_p, "r", encoding="utf-8") as f:
+            inp = json.load(f)
+            assert inp.get("id_corrida") == cid
+            assert "timestamp_inicio" in inp
+            assert "user_prompt" in inp
+            assert "system_prompt" in inp
+            assert "input_operacional" in inp
+            assert "payload_inicial_modelo" in inp
+            
+        with open(out_p, "r", encoding="utf-8") as f:
+            out = json.load(f)
+            assert out.get("id_corrida") == cid
+            assert "dictamen_estructurado" in out
+            assert out["dictamen_estructurado"]["clasificacion_riesgo"] in ["NORMAL", "OBSERVAR", "ESCALAR"]
+            assert out["dictamen_estructurado"]["suficiencia_informacion"] in ["COMPLETA", "PARCIAL", "INSUFICIENTE"]
+            assert out["humanDecision"]["status"] == "pending"
+            
+        with open(meta_p, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+            assert meta.get("id_corrida") == cid
+            assert "timestamp_inicio" in meta
+            assert "duracion_segundos" in meta
+            assert "latencia_total_ms" in meta
+            assert meta.get("modelo") == "gemini-3.1-flash-lite"
+            assert "tools_invocadas" in meta
+            assert len(meta["tools_invocadas"]) == 3
+            assert "tokens" in meta
+            assert meta["tokens"]["total_tokens"] > 0
+            assert "economia" in meta
+            assert meta["economia"]["incremental_cost_usd"] == 0
+            assert meta["economia"]["cost_basis"] == "GOOGLE_GEMINI_FREE_TIER"
+    print("  -> 9.2: Vistas derivadas (input, output, metadata) validadas en corridas 002, 006 y 007.")
+
+    # 9.3 Idempotencia del script de extracción
+    extract_script = os.path.join(BASE_DIR, "scripts", "extract_academic_evidence.py")
+    assert os.path.exists(extract_script), f"Script {extract_script} no existe"
+    ret = subprocess.run([sys.executable, extract_script], capture_output=True, text=True)
+    assert ret.returncode == 0, f"extract_academic_evidence.py fallo: {ret.stderr}"
+    
+    # Re-verificar hashes de run.json tras re-extracción
+    for rpath, expected_h in OFFICIAL_RUN_HASHES.items():
+        actual_h = hashlib.sha256(open(rpath, "rb").read()).hexdigest()
+        assert actual_h == expected_h, f"Re-extracción alteró {rpath}"
+    print("  -> 9.3: Script de extracción idempotente comprobado; run.json preservado inmutable.")
 
     print("\n" + "=" * 70)
     print("TODOS LOS TESTS PASARON EXITOSAMENTE (REPOSITORIO ACADÉMICO 100% VÁLIDO)")

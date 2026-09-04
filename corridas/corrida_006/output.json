@@ -1,0 +1,61 @@
+{
+  "id_corrida": "corrida_006",
+  "run_id": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp_fin": "2026-09-03T16:31:47.462586",
+  "clasificacion_riesgo": "NORMAL",
+  "suficiencia_informacion": "COMPLETA",
+  "pico_maximo_estimado_mw": 4508,
+  "factor_causal_principal": "Demanda proyectada dentro de rangos operativos estándar con sesgo histórico de sobreestimación del modelo.",
+  "analisis_tecnico": "La demanda proyectada para el horizonte de 3 días se mantiene por debajo de los 4800 MW, clasificándose como NORMAL. Aunque se observa un descenso en las temperaturas mínimas hacia el final del periodo (6.9°C), el modelo predictivo, que históricamente tiende a sobreestimar la demanda, no muestra señales de estrés operativo. La integridad de los datos base es suficiente para validar esta proyección.",
+  "recomendacion_operativa": "Mantener monitoreo preventivo rutinario. No se requieren acciones correctivas adicionales dado que la demanda proyectada se encuentra en niveles estándar.",
+  "dictamen_estructurado": {
+    "id_evaluacion": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-09-02T10:00:00Z",
+    "periodo_evaluado": {
+      "desde": "2026-09-03",
+      "hasta": "2026-09-05"
+    },
+    "clasificacion_riesgo": "NORMAL",
+    "suficiencia_informacion": "COMPLETA",
+    "pico_maximo_estimado_mw": 4508,
+    "factor_causal_principal": "Demanda proyectada dentro de rangos operativos estándar con sesgo histórico de sobreestimación del modelo.",
+    "evidencias_consultadas": [
+      {
+        "herramienta": "consultar_pronostico_y_demanda_estimada",
+        "hallazgo_clave": "Pico máximo de 4508 MW proyectado para el 2026-09-04, por debajo del umbral de alerta de 5500 MW."
+      },
+      {
+        "herramienta": "consultar_metricas_error_historico",
+        "hallazgo_clave": "El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser incluso inferior a la proyectada."
+      },
+      {
+        "herramienta": "consultar_consistencia_datos_base",
+        "hallazgo_clave": "Discontinuidades detectadas en la base histórica no afectan la integridad de la proyección actual."
+      }
+    ],
+    "analisis_tecnico": "La demanda proyectada para el horizonte de 3 días se mantiene por debajo de los 4800 MW, clasificándose como NORMAL. Aunque se observa un descenso en las temperaturas mínimas hacia el final del periodo (6.9°C), el modelo predictivo, que históricamente tiende a sobreestimar la demanda, no muestra señales de estrés operativo. La integridad de los datos base es suficiente para validar esta proyección.",
+    "recomendacion_operativa": "Mantener monitoreo preventivo rutinario. No se requieren acciones correctivas adicionales dado que la demanda proyectada se encuentra en niveles estándar.",
+    "requiere_intervencion_humana": false
+  },
+  "respuesta_raw_modelo": "{\n  \"id_evaluacion\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"timestamp\": \"2026-09-02T10:00:00Z\",\n  \"periodo_evaluado\": {\n    \"desde\": \"2026-09-03\",\n    \"hasta\": \"2026-09-05\"\n  },\n  \"clasificacion_riesgo\": \"NORMAL\",\n  \"suficiencia_informacion\": \"COMPLETA\",\n  \"pico_maximo_estimado_mw\": 4508,\n  \"factor_causal_principal\": \"Demanda proyectada dentro de rangos operativos estándar con sesgo histórico de sobreestimación del modelo.\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"consultar_pronostico_y_demanda_estimada\",\n      \"hallazgo_clave\": \"Pico máximo de 4508 MW proyectado para el 2026-09-04, por debajo del umbral de alerta de 5500 MW.\"\n    },\n    {\n      \"herramienta\": \"consultar_metricas_error_historico\",\n      \"hallazgo_clave\": \"El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser incluso inferior a la proyectada.\"\n    },\n    {\n      \"herramienta\": \"consultar_consistencia_datos_base\",\n      \"hallazgo_clave\": \"Discontinuidades detectadas en la base histórica no afectan la integridad de la proyección actual.\"\n    }\n  ],\n  \"analisis_tecnico\": \"La demanda proyectada para el horizonte de 3 días se mantiene por debajo de los 4800 MW, clasificándose como NORMAL. Aunque se observa un descenso en las temperaturas mínimas hacia el final del periodo (6.9°C), el modelo predictivo, que históricamente tiende a sobreestimar la demanda, no muestra señales de estrés operativo. La integridad de los datos base es suficiente para validar esta proyección.\",\n  \"recomendacion_operativa\": \"Mantener monitoreo preventivo rutinario. No se requieren acciones correctivas adicionales dado que la demanda proyectada se encuentra en niveles estándar.\",\n  \"requiere_intervencion_humana\": false\n}",
+  "humanDecision": {
+    "status": "pending",
+    "operador": null,
+    "timestamp_decision": null,
+    "comentario": null
+  },
+  "validation_status": {
+    "valido": true,
+    "parseo_json": true,
+    "cumple_schema_salida": true
+  },
+  "security": {
+    "payload_sanitized": true,
+    "contains_email_content": false,
+    "contains_file_paths": false,
+    "contains_credentials": false,
+    "contains_raw_pdf": false
+  },
+  "source_run_json": "run.json",
+  "nota_metodologica": "Vista derivada de run.json para facilitar la evaluación automatizada de la salida sin alterar la evidencia primaria inmutable."
+}

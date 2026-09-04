@@ -33,7 +33,20 @@ Para verificar la integridad del código, el funcionamiento de las 3 herramienta
 python tests/test_agent.py
 ```
 
-*Resultado esperado:* **7/7 tests pasando exitosamente** con reporte de verificación de hashes.
+*Resultado esperado:* **9/9 tests pasando exitosamente** con reporte de verificación de hashes, integridad de tools, sanitización de seguridad, validación estricta TLS e inmutabilidad de corridas.
+
+---
+
+
+### 3.1 Verificación y Extracción de Vistas Derivadas (D3 y D4)
+
+Para verificar o regenerar de forma determinística e idempotente los archivos derivados `input.json`, `output.json` y `metadata.json` a partir de los `run.json` primarios:
+
+```bash
+python scripts/extract_academic_evidence.py
+```
+
+*Resultado esperado:* Extracción y validación de 3 corridas principales (002, 006, 007), confirmando que los hashes de `run.json` permanecen **100% idénticos e inmutables**.
 
 ---
 

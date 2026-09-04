@@ -22,10 +22,10 @@ De acuerdo con los términos de servicio y la documentación oficial de Google G
 
 | Corrida | Modelo | Input Tokens | Output Tokens | Total Tokens | Latencia Total | Costo Real USD |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **002** | `gemini-3.1-flash-lite` | 7.085 | 564 | **7.649** | 8.66 s | **USD 0** |
+| **002** | `gemini-3.1-flash-lite` | 6.976 | 673 | **7.649** | 8.66 s | **USD 0** |
 | **006** | `gemini-3.1-flash-lite` | 7.438 | 631 | **8.069** | 104.98 s | **USD 0** |
 | **007** | `gemini-3.1-flash-lite` | 8.056 | 700 | **8.756** | 33.93 s | **USD 0** |
-| **Promedio Exitosas** | `gemini-3.1-flash-lite` | **7.526** | **632** | **8.158** | **49.19 s** | **USD 0** |
+| **Promedio Exitosas** | `gemini-3.1-flash-lite` | **7.490** | **668** | **8.158** | **49.19 s** | **USD 0** |
 
 *Nota sobre Corridas 004 y 005:* Registraron 4.865 y 4.976 tokens respectivamente antes de interrumpirse por HTTP 503 en el dictamen final.
 
