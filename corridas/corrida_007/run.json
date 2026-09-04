@@ -1,0 +1,335 @@
+{
+  "run_id": "550e8400-e29b-41d4-a716-446655440000",
+  "executionMode": "real",
+  "timestamp_inicio": "2026-09-03T16:32:58.459621",
+  "timestamp_fin": "2026-09-03T16:33:32.387820",
+  "duracion_segundos": 33.928,
+  "proveedor": "gemini_rest",
+  "modelo": "gemini-3.1-flash-lite",
+  "prompt_version": "sacme-supervisor-v0.4",
+  "system_prompt": "Eres el Agente Supervisor de Riesgo de Demanda para el Sistema Eléctrico de Edenor (Área Metropolitana de Buenos Aires).\nTu misión es supervisar el comportamiento de la demanda eléctrica proyectada, evaluar el riesgo operativo ante condiciones meteorológicas y el sesgo del modelo predictivo, y emitir un dictamen técnico estructurado.\n\nHERRAMIENTAS DISPONIBLES (SOLO LECTURA):\n- `consultar_pronostico_y_demanda_estimada`: Pronóstico meteorológico oficial y cálculo de demanda pico (MW) del modelo ML para el horizonte solicitado.\n- `consultar_metricas_error_historico`: Estadísticas históricas de error, desvíos y sesgo del modelo predictivo según días de anticipación.\n- `consultar_consistencia_datos_base`: Control de continuidad, integridad y detección de discontinuidades en la base histórica de SACME.\n\nPRINCIPIOS DE INVESTIGACIÓN Y AGENCIA (PARADA TEMPRANA):\n1. Economía de Información: Utiliza únicamente la evidencia necesaria para responder con solvencia técnica. No utilices herramientas sólo para completar el catálogo disponible.\n2. Evaluación Iterativa: Después de cada respuesta de herramienta, evalúa críticamente si la información disponible ya es suficiente para responder la solicitud.\n3. Regla de Justificación Previa para Herramientas Secundarias:\n   Antes de invocar cualquier herramienta secundaria, debes identificar explícitamente qué incertidumbre material intentas resolver.\n   Una herramienta secundaria SÓLO debe consultarse si su resultado podría modificar materialmente al menos uno de estos tres elementos:\n   a) la clasificación de riesgo,\n   b) la suficiencia de la información, o\n   c) la recomendación operativa.\n   Si no puedes identificar qué resultado plausible de la herramienta secundaria alteraría alguno de esos tres elementos, DEBES detener la investigación y emitir el dictamen inmediatamente.\n4. Criterio de Parada Temprana: Ante evidencia claramente suficiente y no crítica para el horizonte solicitado, prioriza la parada temprana evitando consultas redundantes de bajo impacto.\n5. Profundización Selectiva: Ante información ambigua, contradictoria o potencialmente crítica para la red, profundiza la investigación utilizando las herramientas que resulten pertinentes. Dispones de un presupuesto de hasta 3 consultas en total.\n6. Alcance Estricto: No inventes ni hagas recomendaciones sobre subestaciones o activos específicos que no hayan sido informados por las herramientas. Las recomendaciones deben limitarse a: mantener monitoreo preventivo, solicitar revisión de despacho por canales habituales, verificar reservas operativas o escalar a supervisión humana.\n\nCRITERIOS DE CLASIFICACIÓN DE RIESGO:\n- 'NORMAL': Demanda proyectada en niveles estándar (< 4.800 MW en Edenor), sin temperaturas extremas ni sesgo de subestimación severo.\n- 'OBSERVAR': Demanda moderadamente alta (4.800 - 5.400 MW), o presencia de gradiente térmico exigente (mínimas < 7°C) con inercia térmica, o sesgo de subestimación histórica que amerite vigilancia intensiva.\n- 'ESCALAR': Demanda estimada >= 5.500 MW (umbral de alerta preventivo) O demanda > 5.000 MW combinada con sesgo histórico de subestimación severo (> 10%) o condiciones de ola polar/ola de calor continuadas.\n\nCRITERIOS DE SUFICIENCIA:\n- 'COMPLETA': La evidencia reunida es concluyente y permite fundamentar el dictamen sin incertidumbre operativa relevante.\n- 'PARCIAL': La evidencia permite evaluar el escenario base pero subsisten incertidumbres no resueltas o alguna herramienta relevante no estuvo disponible.\n- 'INSUFICIENTE': La información no permite caracterizar la demanda esperada ni emitir un dictamen fundamentado.\n\nFORMATO DE SALIDA:\nAl finalizar tus consultas, debes responder EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exacta:\n{\n  \"id_evaluacion\": \"<UUID>\",\n  \"timestamp\": \"<ISO 8601>\",\n  \"periodo_evaluado\": {\n    \"desde\": \"YYYY-MM-DD\",\n    \"hasta\": \"YYYY-MM-DD\"\n  },\n  \"clasificacion_riesgo\": \"NORMAL\" | \"OBSERVAR\" | \"ESCALAR\",\n  \"suficiencia_informacion\": \"COMPLETA\" | \"PARCIAL\" | \"INSUFICIENTE\",\n  \"pico_maximo_estimado_mw\": <int>,\n  \"factor_causal_principal\": \"<Texto conciso explicando la causa preponderante>\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"<nombre_tool>\",\n      \"hallazgo_clave\": \"<hallazgo principal>\"\n    }\n  ],\n  \"analisis_tecnico\": \"<Justificación técnica detallada>\",\n  \"recomendacion_operativa\": \"<Recomendación concisa dentro del alcance>\",\n  \"requiere_intervencion_humana\": <true/false>\n}\n",
+  "user_prompt": "Evaluar el riesgo de demanda para los próximos 5 días.",
+  "iteraciones": 3,
+  "tool_calls": [
+    {
+      "iteracion": 1,
+      "tool_name": "consultar_pronostico_y_demanda_estimada",
+      "args": {
+        "dias_horizonte": 5
+      },
+      "result": {
+        "fuente": "Open-Meteo API + Modelo Cuadrático SACME (data.js)",
+        "dias_horizonte": 5,
+        "predicciones": [
+          {
+            "fecha": "2026-09-03",
+            "dia_semana": "Jueves",
+            "es_fin_de_semana": false,
+            "temp_max_c": 18.5,
+            "temp_min_c": 12.6,
+            "regimen_termico": "CALOR",
+            "weathercode_wmo": 55,
+            "edenor_demanda_pico_estimada_mw": 3603,
+            "gba_demanda_pico_estimada_mw": 7028
+          },
+          {
+            "fecha": "2026-09-04",
+            "dia_semana": "Viernes",
+            "es_fin_de_semana": false,
+            "temp_max_c": 16.2,
+            "temp_min_c": 7.6,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 2,
+            "edenor_demanda_pico_estimada_mw": 4508,
+            "gba_demanda_pico_estimada_mw": 8764
+          },
+          {
+            "fecha": "2026-09-05",
+            "dia_semana": "Sábado",
+            "es_fin_de_semana": true,
+            "temp_max_c": 12.9,
+            "temp_min_c": 6.9,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 51,
+            "edenor_demanda_pico_estimada_mw": 4306,
+            "gba_demanda_pico_estimada_mw": 8380
+          },
+          {
+            "fecha": "2026-09-06",
+            "dia_semana": "Domingo",
+            "es_fin_de_semana": true,
+            "temp_max_c": 10.5,
+            "temp_min_c": 1.9,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 3,
+            "edenor_demanda_pico_estimada_mw": 4977,
+            "gba_demanda_pico_estimada_mw": 9535
+          },
+          {
+            "fecha": "2026-09-07",
+            "dia_semana": "Lunes",
+            "es_fin_de_semana": false,
+            "temp_max_c": 11.4,
+            "temp_min_c": 7.5,
+            "regimen_termico": "FRIO",
+            "weathercode_wmo": 3,
+            "edenor_demanda_pico_estimada_mw": 5006,
+            "gba_demanda_pico_estimada_mw": 9671
+          }
+        ],
+        "resumen_periodo": {
+          "pico_maximo_edenor_mw": 5006,
+          "fecha_pico_maximo": "2026-09-07",
+          "temperatura_minima_periodo_c": 1.9,
+          "temperatura_maxima_periodo_c": 18.5,
+          "alerta_umbral_estatico_5500mw": false
+        }
+      },
+      "latency_ms": 1758.99,
+      "error": null
+    },
+    {
+      "iteracion": 2,
+      "tool_name": "consultar_metricas_error_historico",
+      "args": {
+        "anticipacion_dias": 2
+      },
+      "result": {
+        "anticipacion_dias": 2,
+        "total_dias_evaluados": 29,
+        "error_porcentual_medio_pct": 5.54,
+        "error_absoluto_medio_mae_pct": 7.4,
+        "desvio_maximo_subestimacion_pct": -15.46,
+        "desvio_maximo_sobreestimacion_pct": 23.22,
+        "tendencia_sesgo": "SOBREESTIMACION_SISTEMATICA (El modelo suele proyectar por encima de la demanda real)",
+        "ultimas_observaciones_recientes": [
+          {
+            "fecha": "2026-08-23",
+            "dia": "Domingo",
+            "simulado_mw": 4635,
+            "real_cammesa_mw": 4359,
+            "error_pct": 6.33
+          },
+          {
+            "fecha": "2026-08-26",
+            "dia": "Miércoles",
+            "simulado_mw": 4595,
+            "real_cammesa_mw": 4146,
+            "error_pct": 10.83
+          },
+          {
+            "fecha": "2026-08-27",
+            "dia": "Jueves",
+            "simulado_mw": 3592,
+            "real_cammesa_mw": 4249,
+            "error_pct": -15.46
+          },
+          {
+            "fecha": "2026-08-30",
+            "dia": "Domingo",
+            "simulado_mw": 3858,
+            "real_cammesa_mw": 3131,
+            "error_pct": 23.22
+          },
+          {
+            "fecha": "2026-09-02",
+            "dia": "Miércoles",
+            "simulado_mw": 3394,
+            "real_cammesa_mw": 3402,
+            "error_pct": -0.24
+          }
+        ]
+      },
+      "latency_ms": 27219.01,
+      "error": null
+    },
+    {
+      "iteracion": 3,
+      "tool_name": "consultar_consistencia_datos_base",
+      "args": {},
+      "result": {
+        "estado_consistencia": "CON_DISCONTINUIDADES",
+        "tiene_dias_faltantes": true,
+        "dias_faltantes_detectados": [
+          "30/09/2025",
+          "09/12/2025"
+        ],
+        "total_dias_registrados_sacme": 606,
+        "rango_fechas_disponible": {
+          "desde": "2025-01-01",
+          "hasta": "2026-08-31"
+        },
+        "impacto_en_modelo": "Bajo: los gaps reportados son fechas históricas aisladas que no impiden la simulación actual."
+      },
+      "latency_ms": 1529.91,
+      "error": null
+    }
+  ],
+  "llm_payloads": [
+    {
+      "tipo": "system_prompt",
+      "contenido": "Eres el Agente Supervisor de Riesgo de Demanda para el Sistema Eléctrico de Edenor (Área Metropolitana de Buenos Aires).\nTu misión es supervisar el comportamiento de la demanda eléctrica proyectada, evaluar el riesgo operativo ante condiciones meteorológicas y el sesgo del modelo predictivo, y emitir un dictamen técnico estructurado.\n\nHERRAMIENTAS DISPONIBLES (SOLO LECTURA):\n- `consultar_pronostico_y_demanda_estimada`: Pronóstico meteorológico oficial y cálculo de demanda pico (MW) del modelo ML para el horizonte solicitado.\n- `consultar_metricas_error_historico`: Estadísticas históricas de error, desvíos y sesgo del modelo predictivo según días de anticipación.\n- `consultar_consistencia_datos_base`: Control de continuidad, integridad y detección de discontinuidades en la base histórica de SACME.\n\nPRINCIPIOS DE INVESTIGACIÓN Y AGENCIA (PARADA TEMPRANA):\n1. Economía de Información: Utiliza únicamente la evidencia necesaria para responder con solvencia técnica. No utilices herramientas sólo para completar el catálogo disponible.\n2. Evaluación Iterativa: Después de cada respuesta de herramienta, evalúa críticamente si la información disponible ya es suficiente para responder la solicitud.\n3. Regla de Justificación Previa para Herramientas Secundarias:\n   Antes de invocar cualquier herramienta secundaria, debes identificar explícitamente qué incertidumbre material intentas resolver.\n   Una herramienta secundaria SÓLO debe consultarse si su resultado podría modificar materialmente al menos uno de estos tres elementos:\n   a) la clasificación de riesgo,\n   b) la suficiencia de la información, o\n   c) la recomendación operativa.\n   Si no puedes identificar qué resultado plausible de la herramienta secundaria alteraría alguno de esos tres elementos, DEBES detener la investigación y emitir el dictamen inmediatamente.\n4. Criterio de Parada Temprana: Ante evidencia claramente suficiente y no crítica para el horizonte solicitado, prioriza la parada temprana evitando consultas redundantes de bajo impacto.\n5. Profundización Selectiva: Ante información ambigua, contradictoria o potencialmente crítica para la red, profundiza la investigación utilizando las herramientas que resulten pertinentes. Dispones de un presupuesto de hasta 3 consultas en total.\n6. Alcance Estricto: No inventes ni hagas recomendaciones sobre subestaciones o activos específicos que no hayan sido informados por las herramientas. Las recomendaciones deben limitarse a: mantener monitoreo preventivo, solicitar revisión de despacho por canales habituales, verificar reservas operativas o escalar a supervisión humana.\n\nCRITERIOS DE CLASIFICACIÓN DE RIESGO:\n- 'NORMAL': Demanda proyectada en niveles estándar (< 4.800 MW en Edenor), sin temperaturas extremas ni sesgo de subestimación severo.\n- 'OBSERVAR': Demanda moderadamente alta (4.800 - 5.400 MW), o presencia de gradiente térmico exigente (mínimas < 7°C) con inercia térmica, o sesgo de subestimación histórica que amerite vigilancia intensiva.\n- 'ESCALAR': Demanda estimada >= 5.500 MW (umbral de alerta preventivo) O demanda > 5.000 MW combinada con sesgo histórico de subestimación severo (> 10%) o condiciones de ola polar/ola de calor continuadas.\n\nCRITERIOS DE SUFICIENCIA:\n- 'COMPLETA': La evidencia reunida es concluyente y permite fundamentar el dictamen sin incertidumbre operativa relevante.\n- 'PARCIAL': La evidencia permite evaluar el escenario base pero subsisten incertidumbres no resueltas o alguna herramienta relevante no estuvo disponible.\n- 'INSUFICIENTE': La información no permite caracterizar la demanda esperada ni emitir un dictamen fundamentado.\n\nFORMATO DE SALIDA:\nAl finalizar tus consultas, debes responder EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exacta:\n{\n  \"id_evaluacion\": \"<UUID>\",\n  \"timestamp\": \"<ISO 8601>\",\n  \"periodo_evaluado\": {\n    \"desde\": \"YYYY-MM-DD\",\n    \"hasta\": \"YYYY-MM-DD\"\n  },\n  \"clasificacion_riesgo\": \"NORMAL\" | \"OBSERVAR\" | \"ESCALAR\",\n  \"suficiencia_informacion\": \"COMPLETA\" | \"PARCIAL\" | \"INSUFICIENTE\",\n  \"pico_maximo_estimado_mw\": <int>,\n  \"factor_causal_principal\": \"<Texto conciso explicando la causa preponderante>\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"<nombre_tool>\",\n      \"hallazgo_clave\": \"<hallazgo principal>\"\n    }\n  ],\n  \"analisis_tecnico\": \"<Justificación técnica detallada>\",\n  \"recomendacion_operativa\": \"<Recomendación concisa dentro del alcance>\",\n  \"requiere_intervencion_humana\": <true/false>\n}\n"
+    },
+    {
+      "tipo": "user_prompt",
+      "contenido": "Evaluar el riesgo de demanda para los próximos 5 días."
+    },
+    {
+      "iteracion": 1,
+      "tipo": "tool_response",
+      "tool_name": "consultar_pronostico_y_demanda_estimada",
+      "payload_enviado": {
+        "dias_horizonte": 5,
+        "predicciones": [
+          {
+            "fecha": "2026-09-03",
+            "dia_semana": "Jueves",
+            "es_fin_de_semana": false,
+            "temperatura_minima_c": 12.6,
+            "temperatura_maxima_c": 18.5,
+            "regimen_termico": "CALOR",
+            "demanda_estimada_edenor_mw": 3603,
+            "demanda_estimada_gba_mw": 7028
+          },
+          {
+            "fecha": "2026-09-04",
+            "dia_semana": "Viernes",
+            "es_fin_de_semana": false,
+            "temperatura_minima_c": 7.6,
+            "temperatura_maxima_c": 16.2,
+            "regimen_termico": "FRIO",
+            "demanda_estimada_edenor_mw": 4508,
+            "demanda_estimada_gba_mw": 8764
+          },
+          {
+            "fecha": "2026-09-05",
+            "dia_semana": "Sábado",
+            "es_fin_de_semana": true,
+            "temperatura_minima_c": 6.9,
+            "temperatura_maxima_c": 12.9,
+            "regimen_termico": "FRIO",
+            "demanda_estimada_edenor_mw": 4306,
+            "demanda_estimada_gba_mw": 8380
+          },
+          {
+            "fecha": "2026-09-06",
+            "dia_semana": "Domingo",
+            "es_fin_de_semana": true,
+            "temperatura_minima_c": 1.9,
+            "temperatura_maxima_c": 10.5,
+            "regimen_termico": "FRIO",
+            "demanda_estimada_edenor_mw": 4977,
+            "demanda_estimada_gba_mw": 9535
+          },
+          {
+            "fecha": "2026-09-07",
+            "dia_semana": "Lunes",
+            "es_fin_de_semana": false,
+            "temperatura_minima_c": 7.5,
+            "temperatura_maxima_c": 11.4,
+            "regimen_termico": "FRIO",
+            "demanda_estimada_edenor_mw": 5006,
+            "demanda_estimada_gba_mw": 9671
+          }
+        ],
+        "resumen_periodo": {
+          "pico_maximo_edenor_mw": 5006,
+          "fecha_pico_maximo": "2026-09-07",
+          "temperatura_minima_c": 1.9,
+          "temperatura_maxima_c": 18.5,
+          "alerta_umbral_estatico_5500mw": false
+        }
+      }
+    },
+    {
+      "iteracion": 2,
+      "tipo": "tool_response",
+      "tool_name": "consultar_metricas_error_historico",
+      "payload_enviado": {
+        "anticipacion_dias": 2,
+        "cantidad_observaciones": 29,
+        "error_medio_pct": 5.54,
+        "mae_pct": 7.4,
+        "desvio_maximo_subestimacion_pct": -15.46,
+        "desvio_maximo_sobreestimacion_pct": 23.22,
+        "sesgo": "SOBREESTIMACION_SISTEMATICA (El modelo suele proyectar por encima de la demanda real)"
+      }
+    },
+    {
+      "iteracion": 3,
+      "tipo": "tool_response",
+      "tool_name": "consultar_consistencia_datos_base",
+      "payload_enviado": {
+        "estado": "CON_DISCONTINUIDADES",
+        "total_registros": 606,
+        "cantidad_discontinuidades": 2,
+        "impacto_en_modelo": "Bajo: los gaps reportados son fechas históricas aisladas que no impiden la simulación actual."
+      }
+    }
+  ],
+  "security": {
+    "payload_sanitized": true,
+    "contains_email_content": false,
+    "contains_file_paths": false,
+    "contains_credentials": false,
+    "contains_raw_pdf": false
+  },
+  "dictamen_estructurado": {
+    "id_evaluacion": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-09-03T10:00:00Z",
+    "periodo_evaluado": {
+      "desde": "2026-09-03",
+      "hasta": "2026-09-07"
+    },
+    "clasificacion_riesgo": "OBSERVAR",
+    "suficiencia_informacion": "COMPLETA",
+    "pico_maximo_estimado_mw": 5006,
+    "factor_causal_principal": "Descenso de temperaturas mínimas (hasta 1.9°C) que incrementa la demanda por calefacción.",
+    "evidencias_consultadas": [
+      {
+        "herramienta": "consultar_pronostico_y_demanda_estimada",
+        "hallazgo_clave": "Pico de demanda proyectado en 5006 MW para el 07/09 con temperaturas mínimas de 7.5°C tras un evento de frío intenso el 06/09 (1.9°C)."
+      },
+      {
+        "herramienta": "consultar_metricas_error_historico",
+        "hallazgo_clave": "El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser inferior a la proyectada."
+      },
+      {
+        "herramienta": "consultar_consistencia_datos_base",
+        "hallazgo_clave": "Base de datos con discontinuidades menores, sin impacto significativo en la confiabilidad del pronóstico actual."
+      }
+    ],
+    "analisis_tecnico": "La demanda proyectada para el periodo se mantiene por debajo del umbral crítico de 5500 MW. Aunque se observa un incremento hacia el final del periodo debido a condiciones de frío (mínimas de hasta 1.9°C el 06/09), el sesgo histórico del modelo hacia la sobreestimación (error medio del 5.54%) actúa como un factor de seguridad conservador. La clasificación 'OBSERVAR' se justifica por la proximidad al umbral de 5000 MW y la inercia térmica esperada tras el evento de frío del domingo.",
+    "recomendacion_operativa": "Mantener monitoreo preventivo de la demanda real frente a la proyectada, aprovechando el sesgo de sobreestimación del modelo. No se requieren acciones de despacho extraordinarias en este momento.",
+    "requiere_intervencion_humana": false
+  },
+  "respuesta_raw_modelo": "{\n  \"id_evaluacion\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"timestamp\": \"2026-09-03T10:00:00Z\",\n  \"periodo_evaluado\": {\n    \"desde\": \"2026-09-03\",\n    \"hasta\": \"2026-09-07\"\n  },\n  \"clasificacion_riesgo\": \"OBSERVAR\",\n  \"suficiencia_informacion\": \"COMPLETA\",\n  \"pico_maximo_estimado_mw\": 5006,\n  \"factor_causal_principal\": \"Descenso de temperaturas mínimas (hasta 1.9°C) que incrementa la demanda por calefacción.\",\n  \"evidencias_consultadas\": [\n    {\n      \"herramienta\": \"consultar_pronostico_y_demanda_estimada\",\n      \"hallazgo_clave\": \"Pico de demanda proyectado en 5006 MW para el 07/09 con temperaturas mínimas de 7.5°C tras un evento de frío intenso el 06/09 (1.9°C).\"\n    },\n    {\n      \"herramienta\": \"consultar_metricas_error_historico\",\n      \"hallazgo_clave\": \"El modelo presenta un sesgo de sobreestimación sistemática, lo que sugiere que la demanda real podría ser inferior a la proyectada.\"\n    },\n    {\n      \"herramienta\": \"consultar_consistencia_datos_base\",\n      \"hallazgo_clave\": \"Base de datos con discontinuidades menores, sin impacto significativo en la confiabilidad del pronóstico actual.\"\n    }\n  ],\n  \"analisis_tecnico\": \"La demanda proyectada para el periodo se mantiene por debajo del umbral crítico de 5500 MW. Aunque se observa un incremento hacia el final del periodo debido a condiciones de frío (mínimas de hasta 1.9°C el 06/09), el sesgo histórico del modelo hacia la sobreestimación (error medio del 5.54%) actúa como un factor de seguridad conservador. La clasificación 'OBSERVAR' se justifica por la proximidad al umbral de 5000 MW y la inercia térmica esperada tras el evento de frío del domingo.\",\n  \"recomendacion_operativa\": \"Mantener monitoreo preventivo de la demanda real frente a la proyectada, aprovechando el sesgo de sobreestimación del modelo. No se requieren acciones de despacho extraordinarias en este momento.\",\n  \"requiere_intervencion_humana\": false\n}",
+  "tokens": {
+    "input_tokens": 8056,
+    "output_tokens": 700,
+    "total_tokens": 8756,
+    "estado_conteo": "REPORTADO_POR_API"
+  },
+  "api_cost_usd": 0,
+  "cost_basis": "GOOGLE_GEMINI_FREE_TIER",
+  "incremental_cost_usd": 0,
+  "economic_metrics": {
+    "pricing_tier": "FREE_TIER",
+    "billing_status": "USER_VERIFIED_NO_BILLING",
+    "api_cost_usd": 0,
+    "incremental_cost_usd": 0,
+    "user_confirmed_free_tier": true,
+    "nota_academica": "El operador confirmó explícitamente haber verificado que la API key opera bajo Free Tier sin facturación habilitada."
+  },
+  "latencia_ms": 33928.2,
+  "timeout_seconds": 90,
+  "retry_count": 0,
+  "retries": [],
+  "errores": [],
+  "humanDecision": {
+    "status": "pending",
+    "operador": null,
+    "timestamp_decision": null,
+    "comentario": null
+  }
+}
