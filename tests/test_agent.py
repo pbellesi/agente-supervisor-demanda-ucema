@@ -279,20 +279,32 @@ def run_all_tests():
         assert dec_id in traz_content, f"Falta {dec_id} en TRAZABILIDAD_PROCESO.md"
     print("  -> 10.1: DEC-001 a DEC-006 verificadas en DECISIONES.md y TRAZABILIDAD_PROCESO.md.")
 
-    # 10.2 Cada DEC tiene campos explícitos requeridos en DECISIONES.md
-    required_fields = ["Evidencia de origen:", "Artefactos modificados:", "Corrida(s) de validación:", "Resultado:", "Estado:"]
+    # 10.2 Cada DEC tiene los 9 campos explícitos requeridos en DECISIONES.md
+    required_fields = [
+        "Contexto / problema observado:",
+        "Evidencia de origen:",
+        "Decisión tomada:",
+        "Cambio aplicado:",
+        "Artefactos modificados:",
+        "Versión resultante:",
+        "Corrida(s) de validación:",
+        "Resultado observado:",
+        "Estado de la decisión:"
+    ]
     for dec_id in ["DEC-001", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "DEC-006"]:
-        dec_pos = dec_content.find(f"## {dec_id}")
-        next_dec = dec_content.find("## DEC-", dec_pos + 10)
+        dec_pos = dec_content.find(f"### {dec_id}")
+        assert dec_pos != -1, f"No se encontró encabezado '### {dec_id}' en DECISIONES.md"
+        next_dec = dec_content.find("### DEC-", dec_pos + 10)
         chunk = dec_content[dec_pos:next_dec] if next_dec != -1 else dec_content[dec_pos:]
         for rf in required_fields:
             assert rf in chunk, f"Falta '{rf}' en {dec_id} en DECISIONES.md"
-    print("  -> 10.2: Campos explícitos de evidencia, artefactos, validación, resultado y estado validados en todas las DEC.")
+    print("  -> 10.2: Los 9 campos uniformes de causalidad agéntica validados en DEC-001 a DEC-006.")
 
-    # 10.3 Las corridas 001 a 007 están referenciadas en la historia experimental
+    # 10.3 Las corridas 001 a 007 están referenciadas en DECISIONES.md y TRAZABILIDAD_PROCESO.md
     for cid in ["Corrida 001", "Corrida 002", "Corrida 003", "Corrida 004", "Corrida 005", "Corrida 006", "Corrida 007"]:
+        assert cid in dec_content, f"Falta {cid} en DECISIONES.md"
         assert cid in traz_content, f"Falta {cid} en TRAZABILIDAD_PROCESO.md"
-    print("  -> 10.3: Corridas 001 a 007 referenciadas unívocamente en la historia experimental.")
+    print("  -> 10.3: Corridas 001 a 007 referenciadas unívocamente en DECISIONES.md y TRAZABILIDAD_PROCESO.md.")
 
     # 10.4 Coherencia de versiones de prompt con documentación
     prompt_version_map = {
